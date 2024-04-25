@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
-import { DBCreateUser, DBVerifyUser } from "../services/DB/AuthService";
+import { DBcreateUser, DBverifyUser } from "../services/DB/AuthService";
 import { SignInRequestType, SignUpRequestType } from "../types/Auth";
 import { Prisma } from "@prisma/client";
-import { decodeJwtToken, generateJwtToken } from "../services/utils/useToken";
+import { generateJwtToken } from "../services/utils/useToken";
 import generateHash from "../services/utils/generateHash";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
 
@@ -16,7 +16,7 @@ export default function AuthController(): Router {
       if (!email || !name || !password) throw Error("Incomplete Information");
 
       const passwordHash = generateHash(email, password);
-      const user = await DBCreateUser({ email, name, passwordHash });
+      const user = await DBcreateUser({ email, name, passwordHash });
       const token = generateJwtToken({ email, passwordHash });
 
       res.set("token", token);
@@ -36,7 +36,7 @@ export default function AuthController(): Router {
     try {
       if (!email || !password) throw Error("Incomplete Information");
       const passwordHash = generateHash(email, password);
-      const user = await DBVerifyUser({ email, passwordHash });
+      const user = await DBverifyUser({ email, passwordHash });
       const token = generateJwtToken({ email, passwordHash });
       res.set("token", token);
       res.status(200).send({ user });

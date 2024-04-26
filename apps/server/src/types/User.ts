@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { ChatMessage } from "llamaindex";
 
 export interface SendMessageType {
   message: string;
@@ -13,11 +14,6 @@ export interface ContextWindowType {
   email: string;
 }
 
-export interface ContextWindowUpdateType {
-  id: number;
-  chatMessages: string;
-}
-
 export interface EmbedDocumentInputType {
   pdfPath: string;
   pdfKey: String;
@@ -26,5 +22,11 @@ export interface EmbedDocumentInputType {
 export interface QueryDocumentInputType {
   vectorURL: string;
   res: Response;
+  chatMessages: ChatMessage[];
   message: string;
+}
+
+export interface StoreChatDataInputType {
+  chatMessages: string;
+  Id: number;
 }

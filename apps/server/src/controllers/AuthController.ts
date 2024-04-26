@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
-import { DBcreateUser, DBverifyUser } from "../services/DB/AuthService";
+import { DB_createUser, DB_verifyUser } from "../services/DB/AuthService";
 import { SignInRequestType, SignUpRequestType } from "../types/Auth";
 import { Prisma } from "@prisma/client";
-import { generateJwtToken } from "../services/utils/useToken";
+import { generateJwtToken } from "../services/utils/useJwtToken";
 import generateHash from "../services/utils/generateHash";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
 
@@ -16,12 +16,12 @@ export default function AuthController(): Router {
       if (!email || !name || !password) throw Error("Incomplete Information");
 
       const passwordHash = generateHash(email, password);
-      const user = await DBcreateUser({ email, name, passwordHash });
+      const user = await DB_createUser({ email, name, passwordHash });
       const token = generateJwtToken({ email, passwordHash });
 
       res.set("token", token);
       res.status(200).send({ user });
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P1001") error.message = "Database Down";
         if (error.code === "P2002") error.message = "Email Already In Use";
@@ -36,11 +36,11 @@ export default function AuthController(): Router {
     try {
       if (!email || !password) throw Error("Incomplete Information");
       const passwordHash = generateHash(email, password);
-      const user = await DBverifyUser({ email, passwordHash });
+      const user = await DB_verifyUser({ email, passwordHash });
       const token = generateJwtToken({ email, passwordHash });
       res.set("token", token);
       res.status(200).send({ user });
-    } catch (error) {
+    } catch (error: any) {
       res.status(401).send({
         message: error.message,
       });

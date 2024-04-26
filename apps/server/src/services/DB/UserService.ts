@@ -1,7 +1,8 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/client";
+import { ContextWindowType } from "../../types/User";
 
-export const DBgetUserData = async (email: string) => {
+export const DB_getUserData = async (email: string) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -14,7 +15,7 @@ export const DBgetUserData = async (email: string) => {
 
     if (user === null) throw Error("No User Found");
     return user;
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P1001") error.message = "Database Down";
     }
@@ -22,6 +23,28 @@ export const DBgetUserData = async (email: string) => {
   }
 };
 
-export const DBstoreChatData = () => {};
+export const DB_createContextWindow = async (ContextWindowInput: ContextWindowType) => {
+  const { email, ...ContextData } = ContextWindowInput;
 
-export const DBcreateContextWindow = () => {};
+  try {
+    const ContextWindow = await prisma.context_Window.create({
+      data: {
+        ...ContextData,
+        chatMessages: "[]",
+        owner: {
+          connect: {
+            email,
+          },
+        },
+      },
+    });
+    return ContextWindow;
+  } catch (error: any) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P1001") error.message = "Database Down";
+    }
+    throw Error(error.message);
+  }
+};
+
+export const DB_storeChatData = () => {};

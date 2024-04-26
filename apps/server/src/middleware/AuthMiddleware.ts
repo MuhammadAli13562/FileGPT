@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { DBverifyUser } from "../services/DB/AuthService";
-import { decodeJwtToken } from "../services/utils/useToken";
+import { DB_verifyUser } from "../services/DB/AuthService";
+import { decodeJwtToken } from "../services/utils/useJwtToken";
 
 export const AuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -8,10 +8,10 @@ export const AuthMiddleware = async (req: Request, res: Response, next: NextFunc
     if (!token) throw new Error("Token is missing");
 
     const { email, passwordHash } = decodeJwtToken(token);
-    await DBverifyUser({ email, passwordHash });
+    await DB_verifyUser({ email, passwordHash });
     res.set("email", email);
     next();
-  } catch (error) {
+  } catch (error: any) {
     res.status(401).send({ message: error.message });
   }
 };

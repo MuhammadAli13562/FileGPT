@@ -1,10 +1,10 @@
-export interface SignUpDBType {
+export interface SignUpDB_Type {
   email: string;
   name: string;
   passwordHash: string;
 }
 
-export interface SignInDBType {
+export interface SignInDB_Type {
   email: string;
   passwordHash: string;
 }

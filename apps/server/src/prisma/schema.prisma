@@ -33,7 +33,10 @@ model Context_Window {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   chatMessages Json
-  storagePath String
+  vectorURL String
+  pdfName String
+  pdfURL String
+  pdfKey String
   owner User @relation(fields: [ownerId] , references: [Id] , onUpdate: Cascade , onDelete: Cascade)
   ownerId Int
 

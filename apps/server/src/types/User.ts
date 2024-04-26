@@ -4,5 +4,19 @@ export interface SendMessageType {
 }
 
 export interface ContextWindowType {
-  file: File[];
+  vectorURL: string;
+  pdfURL: string;
+  pdfName: string;
+  pdfKey: string;
+  email: string;
+}
+
+export interface ContextWindowUpdateType {
+  id: number;
+  chatMessages: string;
+}
+
+export interface EmbedDocumentInputType {
+  pdfPath: string;
+  pdfKey: String;
 }

@@ -1,16 +1,9 @@
-import { SignInDBType, SignUpDBType } from "../../types/Auth";
+import { SignInDB_Type, SignUpDB_Type } from "../../types/Auth";
 import prisma from "../../prisma/client";
+import { Prisma } from "@prisma/client";
 
-export const DBcreateUser = async ({ email, name, passwordHash }: SignUpDBType) => {
+export const DB_createUser = async ({ email, name, passwordHash }: SignUpDB_Type) => {
   try {
-    const prev = await prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (prev !== null) throw Error("Email Already Exists");
-
     const user = await prisma.user.create({
       data: {
         email,
@@ -20,12 +13,17 @@ export const DBcreateUser = async ({ email, name, passwordHash }: SignUpDBType) 
     });
 
     return user;
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") error.message = "Email Already In Use";
+      else if (error.code === "P1001") error.message = "Database Down";
+    }
+
     throw Error(error.message);
   }
 };
 
-export const DBverifyUser = async ({ email, passwordHash }: SignInDBType) => {
+export const DB_verifyUser = async ({ email, passwordHash }: SignInDB_Type) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -37,7 +35,7 @@ export const DBverifyUser = async ({ email, passwordHash }: SignInDBType) => {
     if (user === null) throw Error("Incorrect Username or Password");
 
     return user;
-  } catch (error) {
+  } catch (error: any) {
     throw Error(error.message);
   }
 };

@@ -6,7 +6,7 @@ import { PutObjectCommand, PutObjectCommandInput, GetObjectCommand } from "@aws-
 import { s3 } from "../config/s3";
 import dotenv from "dotenv";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
-import { RAG_EmbedDocument, RAG_QueryLLM } from "../services/RAG/EmbedDocs";
+import { RAG_EmbedDocument, RAG_QueryDocument } from "../services/RAG/EmbednQuery";
 
 dotenv.config();
 const Bucket = process.env.AWS_BUCKET_NAME;
@@ -73,7 +73,7 @@ export default function UserController() {
         await s3.send(new PutObjectCommand(PutCommandInput));
 
         //----------------------------------------------
-        //  Save New ContextWindow Data in Prisma Here
+        //  Create New ContextWindow Data in Prisma Here
 
         const ContextWindowInput = {
           pdfKey: Key,

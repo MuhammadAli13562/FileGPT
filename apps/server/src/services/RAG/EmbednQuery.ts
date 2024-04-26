@@ -6,11 +6,8 @@ import {
   Groq,
   storageContextFromDefaults,
   ContextChatEngine,
-  ChatMessage,
-  serviceContextFromDefaults,
 } from "llamaindex";
-import { writeFileSync } from "node:fs";
-import { EmbedDocumentInputType } from "../../types/User";
+import { EmbedDocumentInputType, QueryDocumentInputType } from "../../types/User";
 import dotenv from "dotenv";
 const PDFParser = require("pdf-parse");
 
@@ -46,4 +43,36 @@ export const RAG_EmbedDocument = async (EmbedDocumentInput: EmbedDocumentInputTy
   }
 };
 
-export const RAG_QueryLLM = () => {};
+export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputType) => {
+  const { vectorURL, message, res } = QueryDocumentInput;
+
+  const storageContext = await storageContextFromDefaults({
+    persistDir: vectorURL,
+  });
+
+  const index = await VectorStoreIndex.init({
+    storageContext,
+  });
+
+  const retriever = index.asRetriever();
+
+  const chatEngine = new ContextChatEngine({
+    chatModel: Settings.llm,
+    retriever,
+  });
+
+  const stream = await chatEngine.chat({
+    message,
+    stream: true,
+  });
+
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.response);
+    // HTTP PIPELINE
+    res.write(chunk);
+  }
+
+  // Returned the whole chat history
+
+  return JSON.stringify(chatEngine.chatHistory.messages);
+};

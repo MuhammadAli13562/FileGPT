@@ -1,3 +1,5 @@
+import { Response } from "express";
+
 export interface SendMessageType {
   message: string;
   contextWindow_id: number;
@@ -19,4 +21,10 @@ export interface ContextWindowUpdateType {
 export interface EmbedDocumentInputType {
   pdfPath: string;
   pdfKey: String;
+}
+
+export interface QueryDocumentInputType {
+  vectorURL: string;
+  res: Response;
+  message: string;
 }

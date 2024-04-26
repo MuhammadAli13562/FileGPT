@@ -80,7 +80,7 @@ export default function UserController() {
         pdfName: file.filename,
         pdfURL: BucketLink + Key,
         vectorURL,
-        email: res.get("email")!,
+        email: "a@a.com",
       };
       const ContextWindow = await DB_createContextWindow(ContextWindowInput);
 
@@ -99,8 +99,13 @@ export default function UserController() {
       //----------------------------------------------------------------
       // Retreive Context Data From DB
 
-      const { contextWindow_id, message } = req.body as SendMessageType;
-      const { chatMessages, vectorURL } = await DB_getContextData(contextWindow_id);
+      console.log("req body : ", req.body);
+      if (!req.body.id) throw Error("req body empty");
+
+      const { id, message } = req.body as SendMessageType;
+
+      const Id = Number(id);
+      const { chatMessages, vectorURL } = await DB_getContextData(Id);
 
       //----------------------------------------------------------------
       // Query Document With Message which streams response and returns new Chat Messages
@@ -118,7 +123,7 @@ export default function UserController() {
 
       const StoreChatDataInput: StoreChatDataInputType = {
         chatMessages: new_chatMessages,
-        Id: contextWindow_id,
+        Id,
       };
       await DB_storeChatData(StoreChatDataInput);
 

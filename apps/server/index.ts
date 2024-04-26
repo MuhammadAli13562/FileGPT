@@ -5,6 +5,8 @@ import cors from "cors";
 const app = express();
 
 app.use(cors({ exposedHeaders: ["*"] }));
+app.use(express.json());
+app.use(express.urlencoded());
 
 app.use("/auth", AuthController());
 app.use("/user", UserController());

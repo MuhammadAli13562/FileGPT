@@ -13,15 +13,10 @@ async function main() {
   });
 }
 
-async function ret() {
-  try {
-    const decoded = jwt.verify("1234", "456");
-  } catch (error: any) {
-    console.log("error :", error.message);
-  }
+async function fetch() {
+  const users = await prisma.user.findMany();
+
+  console.log("users : ", users);
 }
 
-const relativePath = "../../uploads/";
-const new_path = path.resolve(__dirname, relativePath);
-
-console.log(new_path);
+fetch();

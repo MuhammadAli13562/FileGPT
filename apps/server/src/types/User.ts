@@ -3,7 +3,7 @@ import { ChatMessage } from "llamaindex";
 
 export interface SendMessageType {
   message: string;
-  contextWindow_id: number;
+  id: string;
 }
 
 export interface ContextWindowType {

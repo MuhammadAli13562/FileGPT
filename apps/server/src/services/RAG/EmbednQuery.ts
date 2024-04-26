@@ -9,6 +9,7 @@ import {
 } from "llamaindex";
 import { EmbedDocumentInputType, QueryDocumentInputType } from "../../types/User";
 import dotenv from "dotenv";
+import path from "node:path";
 const PDFParser = require("pdf-parse");
 
 dotenv.config();
@@ -26,7 +27,8 @@ export const RAG_EmbedDocument = async (EmbedDocumentInput: EmbedDocumentInputTy
 
     const document = new Document({ text: pdfText.text });
 
-    const EmbedPath = `./storage/${pdfKey}`;
+    const EmbedPath = path.resolve(__dirname, `./storage/${pdfKey}`);
+
     const storageContext = await storageContextFromDefaults({
       persistDir: EmbedPath,
     });
@@ -39,40 +41,48 @@ export const RAG_EmbedDocument = async (EmbedDocumentInput: EmbedDocumentInputTy
     // Return the Persistance Directory for future fetching
     return EmbedPath;
   } catch (error) {
+    console.log("Embed Error : ", error);
+
     throw Error("Error Creating Embeddings");
   }
 };
 
 export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputType) => {
-  const { vectorURL, message, res } = QueryDocumentInput;
+  try {
+    const { vectorURL, message, res } = QueryDocumentInput;
 
-  const storageContext = await storageContextFromDefaults({
-    persistDir: vectorURL,
-  });
+    const storageContext = await storageContextFromDefaults({
+      persistDir: vectorURL,
+    });
 
-  const index = await VectorStoreIndex.init({
-    storageContext,
-  });
+    const index = await VectorStoreIndex.init({
+      storageContext,
+    });
 
-  const retriever = index.asRetriever();
+    const retriever = index.asRetriever();
 
-  const chatEngine = new ContextChatEngine({
-    chatModel: Settings.llm,
-    retriever,
-  });
+    const chatEngine = new ContextChatEngine({
+      chatModel: Settings.llm,
+      retriever,
+    });
 
-  const stream = await chatEngine.chat({
-    message,
-    stream: true,
-  });
+    const stream = await chatEngine.chat({
+      message,
+      stream: true,
+    });
 
-  for await (const chunk of stream) {
-    process.stdout.write(chunk.response);
-    // HTTP PIPELINE
-    res.write(chunk);
+    for await (const chunk of stream) {
+      process.stdout.write(chunk.response);
+      // HTTP PIPELINE
+
+      JSON.stringify(chunk);
+    }
+
+    // Returned the whole chat history
+
+    return JSON.stringify(chatEngine.chatHistory.messages);
+  } catch (error: any) {
+    console.log("Error In RAG Query", error.message);
+    throw Error(error.message);
   }
-
-  // Returned the whole chat history
-
-  return JSON.stringify(chatEngine.chatHistory.messages);
 };

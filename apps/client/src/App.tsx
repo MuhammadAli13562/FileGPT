@@ -3,7 +3,7 @@ import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
 import SignInForm from "./_auth/pages/SignInForm";
 import SignUpForm from "./_auth/pages/SignUpForm";
-import LandingPage from "./_root/pages/LandingPage";
+import LandingPage from "./_auth/pages/LandingPage";
 import ContextWindow from "./_root/pages/ContextWindow";
 
 function App() {

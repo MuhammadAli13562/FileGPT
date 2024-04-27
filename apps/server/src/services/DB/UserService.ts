@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/client";
 import { ContextWindowType, StoreChatDataInputType } from "../../types/User";
+import { ContextSelect, UserSelect } from "../../prisma/selections";
 
 export const DB_getUserData = async (email: string) => {
   try {
@@ -8,9 +9,7 @@ export const DB_getUserData = async (email: string) => {
       where: {
         email,
       },
-      include: {
-        contextWindows: true,
-      },
+      select: UserSelect,
     });
 
     if (user === null) throw Error("No User Found");
@@ -37,6 +36,7 @@ export const DB_createContextWindow = async (ContextWindowInput: ContextWindowTy
           },
         },
       },
+      select: ContextSelect,
     });
     return ContextWindow;
   } catch (error: any) {

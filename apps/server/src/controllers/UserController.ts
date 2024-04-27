@@ -100,7 +100,7 @@ export default function UserController() {
     }
   });
 
-  router.post("/queryDocument", async (req: Request, res: Response) => {
+  router.post("/query", async (req: Request, res: Response) => {
     try {
       //----------------------------------------------------------------
       // Retreive Context Data From DB

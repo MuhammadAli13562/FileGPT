@@ -12,6 +12,7 @@ import { s3 } from "../config/s3";
 import dotenv from "dotenv";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
 import { RAG_EmbedDocument, RAG_QueryDocument } from "../services/RAG/EmbednQuery";
+import { convertFileToText } from "../services/RAG/FileHanding";
 import { QueryDocumentInputType, SendMessageType, StoreChatDataInputType } from "../types/User";
 
 dotenv.config();
@@ -47,21 +48,26 @@ export default function UserController() {
 
   router.post("/upload", upload.single("file"), async (req: Request, res: Response) => {
     try {
-      const file = req.file;
+      let file = req.file;
       if (!file) throw Error("No File Provided");
       const Key = v4();
+
+      //----------------------------------------------
+      // File Handling -- Result all formats as text
+
+      const fileText = await convertFileToText(file);
 
       //----------------------------------------------
       // Implement Indexing , Embedding , Logic Here
 
       const EmbedDocumentInput = {
-        pdfPath: file.path,
-        pdfKey: Key,
+        text: fileText,
+        Key,
       };
 
       const vectorURL = await RAG_EmbedDocument(EmbedDocumentInput);
 
-      //----------------------------------------------
+      // //----------------------------------------------
       // Upload to S3 Logic Here
 
       const PutCommandInput: PutObjectCommandInput = {
@@ -76,16 +82,16 @@ export default function UserController() {
       //  Create New ContextWindow Data in Prisma Here
 
       const ContextWindowInput = {
-        pdfKey: Key,
-        pdfName: file.filename,
-        pdfURL: BucketLink + Key,
+        fileKey: Key,
+        fileName: file.filename,
+        fileURL: BucketLink + Key,
         vectorURL,
         email: "a@a.com",
       };
       const ContextWindow = await DB_createContextWindow(ContextWindowInput);
 
-      //----------------------------------------------
-      //  Clean Up & Return
+      // //----------------------------------------------
+      // //  Clean Up & Return
 
       await unlinkFile(file.path); // delete file from local disc
       res.status(200).send({ ContextWindow });
@@ -99,8 +105,7 @@ export default function UserController() {
       //----------------------------------------------------------------
       // Retreive Context Data From DB
 
-      console.log("req body : ", req.body);
-      if (!req.body.id) throw Error("req body empty");
+      if (!req.body.id || !req.body.message) throw Error("Incomplete Information");
 
       const { id, message } = req.body as SendMessageType;
 

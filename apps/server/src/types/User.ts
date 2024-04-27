@@ -8,15 +8,15 @@ export interface SendMessageType {
 
 export interface ContextWindowType {
   vectorURL: string;
-  pdfURL: string;
-  pdfName: string;
-  pdfKey: string;
+  fileURL: string;
+  fileName: string;
+  fileKey: string;
   email: string;
 }
 
 export interface EmbedDocumentInputType {
-  pdfPath: string;
-  pdfKey: String;
+  text: string;
+  Key: String;
 }
 
 export interface QueryDocumentInputType {

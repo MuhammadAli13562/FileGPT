@@ -28,9 +28,11 @@
     "nodemon": "^3.1.0",
     "pdf-parse": "^1.1.1",
     "prisma": "^5.13.0",
+    "tesseract.js": "^5.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma"

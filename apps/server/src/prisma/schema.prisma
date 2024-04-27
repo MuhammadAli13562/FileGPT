@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -34,9 +29,9 @@ model Context_Window {
   updatedAt DateTime @updatedAt
   chatMessages Json
   vectorURL String
-  pdfName String
-  pdfURL String
-  pdfKey String
+  fileName String
+  fileURL String
+  fileKey String
   owner User @relation(fields: [ownerId] , references: [Id] , onUpdate: Cascade , onDelete: Cascade)
   ownerId Int
 

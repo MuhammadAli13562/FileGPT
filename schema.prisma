@@ -1,0 +1,40 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+  
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+
+  Id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  email String @unique
+  passwordHash String
+  contextWindows Context_Window[]
+
+}
+
+model Context_Window {
+
+  Id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chatMessages Json
+  vectorURL String
+  fileName String
+  fileURL String
+  fileKey String
+  owner User @relation(fields: [ownerId] , references: [Id] , onUpdate: Cascade , onDelete: Cascade)
+  ownerId Int
+
+}
+

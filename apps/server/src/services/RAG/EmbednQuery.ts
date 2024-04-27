@@ -1,4 +1,3 @@
-import fs from "node:fs/promises";
 import {
   Document,
   Settings,
@@ -10,7 +9,6 @@ import {
 import { EmbedDocumentInputType, QueryDocumentInputType } from "../../types/User";
 import dotenv from "dotenv";
 import path from "node:path";
-const PDFParser = require("pdf-parse");
 
 dotenv.config();
 const GROQ_API = process.env.GROQ_API_KEY;
@@ -20,14 +18,10 @@ Settings.llm = new Groq({ apiKey: GROQ_API, model: LLM_MODEL });
 
 export const RAG_EmbedDocument = async (EmbedDocumentInput: EmbedDocumentInputType) => {
   try {
-    const { pdfPath, pdfKey } = EmbedDocumentInput;
+    const { text, Key } = EmbedDocumentInput;
 
-    const pdfBuffer = await fs.readFile(pdfPath);
-    const pdfText = await PDFParser(pdfBuffer);
-
-    const document = new Document({ text: pdfText.text });
-
-    const EmbedPath = path.resolve(__dirname, `./storage/${pdfKey}`);
+    const document = new Document({ text });
+    const EmbedPath = path.resolve(__dirname, `./storage/${Key}`);
 
     const storageContext = await storageContextFromDefaults({
       persistDir: EmbedPath,
@@ -72,7 +66,10 @@ export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputTy
       stream: true,
     });
 
-    res.writeHead(200, { "Content-Type": "application/json" });
+    res.writeHead(200, {
+      "Content-Type": "text/plain",
+      "Transfer-Encoding": "chunked",
+    });
 
     for await (const chunk of stream) {
       process.stdout.write(chunk.response);

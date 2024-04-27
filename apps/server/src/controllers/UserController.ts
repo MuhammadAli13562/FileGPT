@@ -53,7 +53,7 @@ export default function UserController() {
       const Key = v4();
 
       //----------------------------------------------
-      // File Handling -- Result all formats as text
+      // File Handling -- Convert all formats to text
 
       const fileText = await convertFileToText(file);
 

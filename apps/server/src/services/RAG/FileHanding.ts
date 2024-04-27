@@ -9,18 +9,11 @@ export async function convertFileToText(file: Express.Multer.File) {
 
   if (fileExtension === "pdf") {
     return await convertPdfToText(file);
-  } else if (["csv", "plain"].includes(fileExtension)) {
+  } else if (TextFormats.includes(fileExtension)) {
     return await readTextFile(file);
-  } else if (
-    [
-      "xls",
-      "xlsx",
-      "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "application/vnd.ms-excel",
-    ].includes(fileExtension)
-  ) {
+  } else if (ExcelFormats.includes(fileExtension)) {
     return await extractTextFromExcel(file);
-  } else if (["jpg", "jpeg", "png"].includes(fileExtension)) {
+  } else if (ImageFormats.includes(fileExtension)) {
     return await extractTextFromImage(file);
   } else {
     throw Error("Unsupported File Type");
@@ -67,3 +60,15 @@ const extractTextFromImage = async (file: Express.Multer.File) => {
   console.log(output);
   return output;
 };
+
+// ------- FORMATS ----------------------------
+const ExcelFormats = [
+  "xls",
+  "xlsx",
+  "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-excel",
+];
+
+const ImageFormats = ["jpg", "jpeg", "png"];
+
+const TextFormats = ["csv", "plain"];

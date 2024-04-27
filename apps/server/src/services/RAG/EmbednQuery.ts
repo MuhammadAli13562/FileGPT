@@ -49,7 +49,7 @@ export const RAG_EmbedDocument = async (EmbedDocumentInput: EmbedDocumentInputTy
 
 export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputType) => {
   try {
-    const { vectorURL, message, res } = QueryDocumentInput;
+    const { vectorURL, message, res, chatMessages } = QueryDocumentInput;
 
     const storageContext = await storageContextFromDefaults({
       persistDir: vectorURL,
@@ -63,6 +63,7 @@ export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputTy
 
     const chatEngine = new ContextChatEngine({
       chatModel: Settings.llm,
+      chatHistory: chatMessages,
       retriever,
     });
 
@@ -71,11 +72,12 @@ export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputTy
       stream: true,
     });
 
+    res.writeHead(200, { "Content-Type": "application/json" });
+
     for await (const chunk of stream) {
       process.stdout.write(chunk.response);
       // HTTP PIPELINE
-
-      JSON.stringify(chunk);
+      res.write(JSON.stringify(chunk.response));
     }
 
     // Returned the whole chat history

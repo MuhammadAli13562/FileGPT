@@ -14,7 +14,7 @@ async function main() {
 }
 
 async function fetch() {
-  const users = await prisma.user.findMany();
+  const users = await prisma.context_Window.findMany();
 
   console.log("users : ", users);
 }

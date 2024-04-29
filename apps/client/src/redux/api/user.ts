@@ -1,6 +1,6 @@
 import { fixedCacheKey } from "src/constants";
 import { api } from ".";
-import { ContextDataType, UserDataType } from "@backend/prisma/selections";
+import { ContextDataType, UserDataType, UserMetaDataType } from "@backend/prisma/selections";
 
 export const UserApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -23,6 +23,7 @@ export const UserApi = api.injectEndpoints({
         url: "/user/upload",
         body: form,
       }),
+      invalidatesTags: ["META"],
       transformResponse: (response: { ContextWindow: ContextDataType }) => {
         return response.ContextWindow;
       },
@@ -36,9 +37,25 @@ export const UserApi = api.injectEndpoints({
         );
       },
     }),
+    fetchMetaData: builder.query<UserMetaDataType, void>({
+      query: () => ({
+        method: "get",
+        url: "/user/meta",
+        headers: {
+          //token: localStorage.getItem("token") || "",
+        },
+      }),
+      providesTags: ["META"],
+      transformResponse: (response: { user: UserDataType }) => {
+        console.log("user meta : ", response);
+        return response.user;
+      },
+    }),
   }),
 });
 
-export const { useFetchDataQuery, useUploadDocumentMutation } = UserApi;
+export const { useFetchDataQuery, useUploadDocumentMutation, useFetchMetaDataQuery } = UserApi;
 
 export const useFetchDataFixedCache = () => useFetchDataQuery(fixedCacheKey);
+
+export const useFetchMetaDataFixedCache = () => useFetchMetaDataQuery(fixedCacheKey);

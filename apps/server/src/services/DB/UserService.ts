@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/client";
 import { ContextWindowType, StoreChatDataInputType } from "../../types/User";
-import { ContextSelect, UserSelect } from "../../prisma/selections";
+import { ContextSelect, UserMetaSelect, UserSelect } from "../../prisma/selections";
 import { ChatMessage } from "llamaindex";
 
 export const DB_getUserData = async (email: string) => {
@@ -84,6 +84,25 @@ export const DB_storeChatData = async (StoreChatDataInput: StoreChatDataInputTyp
         },
       },
     });
+  } catch (error: any) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P1001") error.message = "Database Down";
+    }
+    throw Error(error.message);
+  }
+};
+
+export const DB_getUserMetaData = async (email: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+      select: UserMetaSelect,
+    });
+
+    if (user === null) throw Error("No User Found");
+    return user;
   } catch (error: any) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P1001") error.message = "Database Down";

@@ -35,3 +35,32 @@ export const UserSelect = {
 export type UserDataType = Prisma.UserGetPayload<{
   select: typeof UserSelect;
 }>;
+
+export const ContextMetaSelect = {
+  Id: true,
+  createdAt: true,
+  updatedAt: true,
+  fileName: true,
+  fileURL: true,
+  fileKey: true,
+  ownerId: true,
+} satisfies Prisma.Context_WindowSelect;
+
+export type ContextMetaDataType = Prisma.Context_WindowGetPayload<{
+  select: typeof ContextMetaSelect;
+}>;
+
+export const UserMetaSelect = {
+  Id: true,
+  createdAt: true,
+  updatedAt: true,
+  name: true,
+  email: true,
+  contextWindows: {
+    select: ContextMetaSelect,
+  },
+} satisfies Prisma.UserSelect;
+
+export type UserMetaDataType = Prisma.UserGetPayload<{
+  select: typeof UserMetaSelect;
+}>;

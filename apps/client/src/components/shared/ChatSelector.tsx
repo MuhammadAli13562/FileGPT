@@ -1,13 +1,13 @@
 import { Link, useParams } from "react-router-dom";
 import { useFetchDataFixedCache } from "src/redux/api/user";
-import { SelectContextWindowMeta } from "src/redux/selector";
+import { SelectAllContextWindows } from "src/redux/selector";
 import { useTypedSelector } from "src/redux/store";
 
 const ChatSelector = () => {
   const { id } = useParams();
   const { isLoading, isError } = useFetchDataFixedCache();
-  const ContextWindowsData = useTypedSelector(SelectContextWindowMeta);
-  ContextWindowsData.sort((ctx1, ctx2) => {
+  const ContextWindowsData = useTypedSelector(SelectAllContextWindows);
+  const sortedContextWindowsData = [...ContextWindowsData].sort((ctx1, ctx2) => {
     // Convert createdAt values to Date objects for proper comparison
     const date1 = new Date(ctx1.createdAt);
     const date2 = new Date(ctx2.createdAt);
@@ -26,7 +26,7 @@ const ChatSelector = () => {
   if (isError) return <>Error Occured</>;
   return (
     <div className="flex flex-col  p-2">
-      {ContextWindowsData.map((ctx_win) => {
+      {sortedContextWindowsData.map((ctx_win) => {
         return (
           <Link
             key={ctx_win.fileKey}

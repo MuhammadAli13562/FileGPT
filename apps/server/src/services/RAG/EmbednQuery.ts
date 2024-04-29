@@ -68,7 +68,14 @@ export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputTy
     });
 
     const stream = await chatEngine.chat({
-      message,
+      message: `
+
+      Instructions : For below query , Be succinct in your response and hide any sensitive information like social security numbers , credit card numbers etc but not the names
+
+       --------------------------------------------
+          query : ${message}
+       --------------------------------------------
+      `,
       stream: true,
     });
 

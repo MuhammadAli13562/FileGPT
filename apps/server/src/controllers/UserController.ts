@@ -3,6 +3,7 @@ import {
   DB_createContextWindow,
   DB_getContextData,
   DB_getUserData,
+  DB_getUserMetaData,
   DB_storeChatData,
 } from "../services/DB/UserService";
 import multer from "multer";
@@ -151,7 +152,17 @@ export default function UserController() {
       res.status(404).send({ message: error.message });
     }
   });
-  router.get("/");
+  router.get("/meta", async (req: Request, res: Response) => {
+    try {
+      //const user_email = res.get("email")!;
+      const user = await DB_getUserMetaData("a@a.com");
+      console.log("user meta data : ", user);
+
+      res.status(200).send({ user });
+    } catch (error: any) {
+      res.status(404).send({ message: error.message });
+    }
+  });
 
   return router;
 }

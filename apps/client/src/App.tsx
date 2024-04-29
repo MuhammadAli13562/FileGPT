@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
 import SignInForm from "./_auth/pages/SignInForm";
@@ -22,6 +22,7 @@ function App() {
             </Route>
             {/* Private Routes */}
             <Route element={<RootLayout />}>
+              <Route path="*" element={<Navigate to="/sign-in" />} />
               <Route path="/chat/:id" element={<ContextWindow />} />
             </Route>
           </Routes>

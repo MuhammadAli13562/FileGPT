@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { redirect } from "react-router-dom";
 
 const RootLayout = () => {
   return (

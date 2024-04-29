@@ -3,7 +3,6 @@ import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
 import SignInForm from "./_auth/pages/SignInForm";
 import SignUpForm from "./_auth/pages/SignUpForm";
-import LandingPage from "./_auth/pages/LandingPage";
 import ContextWindow from "./_root/pages/ContextWindow";
 import { ApiProvider } from "@reduxjs/toolkit/query/react";
 import { api } from "./redux/api";
@@ -18,7 +17,6 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route element={<AuthLayout />}>
-              <Route index element={<LandingPage />} />
               <Route path="/sign-in" element={<SignInForm />} />
               <Route path="/sign-up" element={<SignUpForm />} />
             </Route>
@@ -29,7 +27,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </ApiProvider>
-      <ToastContainer autoClose={50000} pauseOnFocusLoss={false} />
+      <ToastContainer autoClose={1000} pauseOnFocusLoss={false} />
     </div>
   );
 }

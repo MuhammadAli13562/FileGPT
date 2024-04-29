@@ -33,7 +33,7 @@ const AuthApi = api.injectEndpoints({
     }),
     VerifyUserLogin: builder.mutation<Response, void>({
       query: () => ({
-        method: "post",
+        method: "get",
         url: "/auth/verify",
         headers: {
           token: localStorage.getItem("token") || "",

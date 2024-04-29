@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { StreamQuery } from "src/query";
-import { sendMessage } from "src/redux/recipies/resetStore";
+import { sendMessage } from "src/redux/recipies/StreamUpdate";
 import { SelectContextWindowById } from "src/redux/selector";
 import { useAppDispatch, useTypedSelector } from "src/redux/store";
 
@@ -41,7 +41,7 @@ function MessageEditor() {
         placeholder="Ask any question"
         value={value}
         onChange={handleChange}
-        className=" outline-blue-400  pr-12 w-[90%] border border-gray-300 rounded p-2 resize-none overflow-hidden"
+        className=" outline-primary  pr-12 w-[90%] border border-gray-300 rounded p-2 resize-none overflow-hidden"
         style={{ height: "42px" }}
         rows={1}
       />

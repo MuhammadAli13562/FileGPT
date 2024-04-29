@@ -6,7 +6,7 @@ import { ScrollArea } from "src/components/ui/scroll-area";
 
 const ContextWindow = () => {
   return (
-    <ResizablePanelGroup direction="horizontal" className="border ">
+    <ResizablePanelGroup direction="horizontal" className=" ">
       <ResizablePanel defaultSize={18} className=" h-screen">
         <ScrollArea>
           <LeftBar />

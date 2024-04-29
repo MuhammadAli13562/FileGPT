@@ -32,3 +32,20 @@ export const SelectContextWindowMeta = createSelector(
     });
   }
 );
+
+// export const SelectContextWindowMetaById = createSelector(
+//   [SelectAllContextWindows, (_, Id: string) => Id],
+//   (contextWindows, Id) => {
+//     const ctx_win = contextWindows.find((ctx) => ctx.fileKey === Id);
+
+//     if (ctx_win)
+//       return {
+//         Id: ctx_win.Id,
+//         createdAt: ctx_win.createdAt,
+//         updatedAt: ctx_win.updatedAt,
+//         fileName: ctx_win.fileName,
+//         fileURL: ctx_win.fileURL,
+//         fileKey: ctx_win.fileKey,
+//       };
+//   }
+// );

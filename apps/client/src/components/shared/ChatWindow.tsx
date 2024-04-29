@@ -40,7 +40,7 @@ const ChatWindow = () => {
               >
                 <div
                   className={`max-w-[35vw]  leading-[24px] message-card rounded-xl px-2 border-2  ${
-                    msg.role === "user" ? "bg-blue-500 " : "bg-reg "
+                    msg.role === "user" ? "bg-primary " : "bg-reg "
                   }`}
                 >
                   <div className="prose text-[14px] -my-3">

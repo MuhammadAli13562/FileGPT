@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { ContextDataType } from "@backend/prisma/selections";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "src/redux/store";
-import { BarLoader, SyncLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
 
 const FileUploader = () => {
   const [uploadFile, { isLoading: isUploadingFile }] = useUploadDocumentMutation(fixedCacheKey);

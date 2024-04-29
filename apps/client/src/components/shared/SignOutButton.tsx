@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { store, useAppDispatch } from "src/redux/store";
-import { api } from "src/redux/api";
+import { useAppDispatch } from "src/redux/store";
 import signoutlogo from "../../../public/logout.svg";
 import { UserApi } from "src/redux/api/user";
 

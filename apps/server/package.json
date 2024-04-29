@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./index.ts",
-    "postinstallxx": "pnpm dlx prisma generate"
+    "postinstall": "pnpm dlx prisma generate"
   },
   "keywords": [],
   "author": "",

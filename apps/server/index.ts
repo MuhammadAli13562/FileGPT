@@ -11,6 +11,6 @@ app.use(express.urlencoded());
 app.use("/auth", AuthController());
 app.use("/user", UserController());
 
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log("Server running on 3000");
 });

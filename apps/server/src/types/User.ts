@@ -22,11 +22,12 @@ export interface EmbedDocumentInputType {
 export interface QueryDocumentInputType {
   vectorURL: string;
   res: Response;
-  chatMessages: ChatMessage[];
+  chatEngineMessages: ChatMessage[];
   message: string;
 }
 
 export interface StoreChatDataInputType {
-  chatMessages: string;
+  newChatWindowMessages: ChatMessage[];
+  newChatEngineMessages: ChatMessage[];
   Id: number;
 }

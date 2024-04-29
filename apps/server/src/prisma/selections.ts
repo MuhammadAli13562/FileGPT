@@ -1,23 +1,11 @@
 import { Prisma } from "@prisma/client";
 
-export const UserSelect = {
-  Id: true,
-  createdAt: true,
-  updatedAt: true,
-  name: true,
-  email: true,
-  contextWindows: true,
-} satisfies Prisma.UserSelect;
-
-export type UserDataType = Prisma.UserGetPayload<{
-  select: typeof UserSelect;
-}>;
-
 export const ContextSelect = {
   Id: true,
   createdAt: true,
   updatedAt: true,
-  chatMessages: true,
+  chatEngineMessages: true,
+  ChatWindowMessages: true,
   vectorURL: true,
   fileName: true,
   fileURL: true,
@@ -27,4 +15,19 @@ export const ContextSelect = {
 
 export type ContextDataType = Prisma.Context_WindowGetPayload<{
   select: typeof ContextSelect;
+}>;
+
+export const UserSelect = {
+  Id: true,
+  createdAt: true,
+  updatedAt: true,
+  name: true,
+  email: true,
+  contextWindows: {
+    select: ContextSelect,
+  },
+} satisfies Prisma.UserSelect;
+
+export type UserDataType = Prisma.UserGetPayload<{
+  select: typeof UserSelect;
 }>;

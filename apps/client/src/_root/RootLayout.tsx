@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
   return (
-    <div>
+    <div className="overflow-hidden apple-font ">
       <Outlet></Outlet>
     </div>
   );

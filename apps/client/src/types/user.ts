@@ -1,13 +1,13 @@
 export interface queryInputType {
-  id: string;
+  id: number;
   message: string;
 }
 
 export interface uploadInputType {
-  file: File[];
+  form: FormData;
 }
 
 export interface MessageType {
-  message: string;
+  content: string;
   role: "user" | "assistant";
 }

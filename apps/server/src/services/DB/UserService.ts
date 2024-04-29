@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/client";
 import { ContextWindowType, StoreChatDataInputType } from "../../types/User";
 import { ContextSelect, UserSelect } from "../../prisma/selections";
+import { ChatMessage } from "llamaindex";
 
 export const DB_getUserData = async (email: string) => {
   try {
@@ -29,7 +30,7 @@ export const DB_createContextWindow = async (ContextWindowInput: ContextWindowTy
     const ContextWindow = await prisma.context_Window.create({
       data: {
         ...ContextData,
-        chatMessages: "[]",
+        chatEngineMessages: [],
         owner: {
           connect: {
             email,
@@ -53,10 +54,7 @@ export const DB_getContextData = async (Id: number) => {
       where: {
         Id,
       },
-      select: {
-        chatMessages: true,
-        vectorURL: true,
-      },
+      select: ContextSelect,
     });
 
     if (!contextData) throw Error("No Context Exists");
@@ -70,7 +68,7 @@ export const DB_getContextData = async (Id: number) => {
 };
 
 export const DB_storeChatData = async (StoreChatDataInput: StoreChatDataInputType) => {
-  const { Id, chatMessages } = StoreChatDataInput;
+  const { Id, newChatEngineMessages, newChatWindowMessages } = StoreChatDataInput;
 
   try {
     await prisma.context_Window.update({
@@ -78,7 +76,12 @@ export const DB_storeChatData = async (StoreChatDataInput: StoreChatDataInputTyp
         Id,
       },
       data: {
-        chatMessages,
+        chatEngineMessages: newChatEngineMessages,
+        ChatWindowMessages: {
+          createMany: {
+            data: newChatWindowMessages as any,
+          },
+        },
       },
     });
   } catch (error: any) {

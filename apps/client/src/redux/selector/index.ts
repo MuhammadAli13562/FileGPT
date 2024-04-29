@@ -10,16 +10,16 @@ export const SelectAllContextWindows = createSelector(
 );
 
 export const SelectContextWindowById = createSelector(
-  [SelectAllContextWindows, (_, Id: number) => Id],
+  [SelectAllContextWindows, (_, Id: string) => Id],
   (contextWindows, Id) => {
-    return contextWindows.find((ctx_win) => ctx_win.Id === Id);
+    return contextWindows.find((ctx_win) => ctx_win.fileKey === Id);
   }
 );
 
 export const SelectContextWindowMeta = createSelector(
   [SelectAllContextWindows],
   (contextWindows) => {
-    contextWindows.map((ctx_win) => {
+    return contextWindows.map((ctx_win) => {
       const contextWindowMetaData = {
         Id: ctx_win.Id,
         createdAt: ctx_win.createdAt,

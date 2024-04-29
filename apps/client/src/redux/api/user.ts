@@ -1,6 +1,7 @@
 import { fixedCacheKey } from "src/constants";
 import { api } from ".";
-import { queryInputType, uploadInputType, MessageType } from "../../types/user";
+import { current } from "@reduxjs/toolkit";
+import { queryInputType } from "../../types/user";
 import { ContextDataType, UserDataType } from "@backend/prisma/selections";
 
 export const UserApi = api.injectEndpoints({
@@ -10,24 +11,24 @@ export const UserApi = api.injectEndpoints({
         method: "get",
         url: "/user/data",
         headers: {
-          token: localStorage.getItem("token") || "",
+          //token: localStorage.getItem("token") || "",
         },
       }),
       transformResponse: (response: { user: UserDataType }) => {
+        console.log("user : ", response);
         return response.user;
       },
     }),
-    uploadDocument: builder.mutation<ContextDataType, uploadInputType>({
-      query: (input: uploadInputType) => ({
+    uploadDocument: builder.mutation<any | string, any>({
+      query: (form: FormData) => ({
         method: "post",
         url: "/user/upload",
-        body: {
-          ...input,
-        },
+        body: form,
       }),
       transformResponse: (response: { ContextWindow: ContextDataType }) => {
         return response.ContextWindow;
       },
+
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         const res = await queryFulfilled;
         dispatch(
@@ -45,30 +46,39 @@ export const UserApi = api.injectEndpoints({
           ...input,
         },
       }),
+
       async onQueryStarted(input, { dispatch, queryFulfilled }) {
-        const optimistic_update = dispatch(
-          UserApi.util.updateQueryData("fetchData", fixedCacheKey, (draft: UserDataType) => {
-            const ctx_win = draft.contextWindows.find((ctx) => ctx.Id === Number(input.id));
-            const msg_arr = JSON.parse(ctx_win?.chatMessages as string) as MessageType[];
-            const new_msg: MessageType = { message: input.message, role: "user" };
-            msg_arr.push(new_msg); // push the new here
-            Object.assign(ctx_win?.chatMessages!, JSON.stringify(msg_arr));
+        const patchResult = dispatch(
+          UserApi.util.updateQueryData("fetchData", fixedCacheKey, (draft) => {
+            const contextWindow = draft.contextWindows.find((ctx) => ctx.Id === input.id);
+
+            const newMessage = {
+              Id: -99,
+              content: input.message,
+              role: "user",
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              ContextWindowId: input.id,
+            };
+            if (contextWindow) contextWindow?.ChatWindowMessages.push(newMessage);
           })
         );
-
         try {
-          const res = await queryFulfilled;
+          //const response = (await queryFulfilled).data;
+
+          // actual updates
+
           dispatch(
-            UserApi.util.updateQueryData("fetchData", undefined, (draft: UserDataType) => {
-              const ctx_win = draft.contextWindows.find((ctx) => ctx.Id === Number(input.id));
-              const msg_arr = JSON.parse(ctx_win?.chatMessages as string) as MessageType[];
-              const new_msg: MessageType = { message: res.data, role: "assistant" };
-              msg_arr.push(new_msg); // push the new here
-              Object.assign(ctx_win?.chatMessages!, JSON.stringify(msg_arr));
+            UserApi.util.updateQueryData("fetchData", fixedCacheKey, (draft) => {
+              const contextWindow = draft.contextWindows.find((ctx) => ctx.Id === input.id);
+              if (contextWindow) {
+                contextWindow.ChatWindowMessages.pop();
+                //contextWindow.ChatWindowMessages.push()
+              }
             })
           );
         } catch (error) {
-          optimistic_update.undo();
+          patchResult.undo();
         }
       },
     }),
@@ -77,4 +87,4 @@ export const UserApi = api.injectEndpoints({
 
 export const { useQueryDocumentMutation, useFetchDataQuery, useUploadDocumentMutation } = UserApi;
 
-export const useFetchDataFixedCache = useFetchDataQuery(fixedCacheKey);
+export const useFetchDataFixedCache = () => useFetchDataQuery(fixedCacheKey);

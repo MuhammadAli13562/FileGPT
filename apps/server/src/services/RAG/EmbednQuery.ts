@@ -6,7 +6,11 @@ import {
   storageContextFromDefaults,
   ContextChatEngine,
 } from "llamaindex";
-import { EmbedDocumentInputType, QueryDocumentInputType } from "../../types/User";
+import {
+  EmbedDocumentInputType,
+  QueryDocumentInputType,
+  StoreChatDataInputType,
+} from "../../types/User";
 import dotenv from "dotenv";
 import path from "node:path";
 
@@ -14,7 +18,7 @@ dotenv.config();
 const GROQ_API = process.env.GROQ_API_KEY;
 const LLM_MODEL = process.env.LLM_MODEL;
 
-Settings.llm = new Groq({ apiKey: GROQ_API, model: LLM_MODEL });
+Settings.llm = new Groq({ apiKey: GROQ_API, model: LLM_MODEL, maxTokens: 512 });
 
 export const RAG_EmbedDocument = async (EmbedDocumentInput: EmbedDocumentInputType) => {
   try {
@@ -43,7 +47,7 @@ export const RAG_EmbedDocument = async (EmbedDocumentInput: EmbedDocumentInputTy
 
 export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputType) => {
   try {
-    const { vectorURL, message, res, chatMessages } = QueryDocumentInput;
+    const { vectorURL, message, res, chatEngineMessages } = QueryDocumentInput;
 
     const storageContext = await storageContextFromDefaults({
       persistDir: vectorURL,
@@ -55,9 +59,11 @@ export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputTy
 
     const retriever = index.asRetriever();
 
+    const lessened_chat_engines = chatEngineMessages.slice(-4);
+
     const chatEngine = new ContextChatEngine({
       chatModel: Settings.llm,
-      chatHistory: chatMessages,
+      chatHistory: lessened_chat_engines,
       retriever,
     });
 
@@ -67,19 +73,22 @@ export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputTy
     });
 
     res.writeHead(200, {
-      "Content-Type": "text/plain",
-      "Transfer-Encoding": "chunked",
+      "Content-Type": "application/json",
     });
 
+    let result = "";
+
     for await (const chunk of stream) {
-      process.stdout.write(chunk.response);
+      console.log(chunk.response);
+      result += chunk.response;
       // HTTP PIPELINE
       res.write(JSON.stringify(chunk.response));
     }
 
+    //res.write(result);
     // Returned the whole chat history
 
-    return JSON.stringify(chatEngine.chatHistory.messages);
+    return { newChatEngineMessages: chatEngine.chatHistory.messages, newChatWindowMessage: result };
   } catch (error: any) {
     console.log("Error In RAG Query", error.message);
     throw Error(error.message);

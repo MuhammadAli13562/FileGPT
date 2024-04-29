@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:postgres@localhost:5432/taxprogpt?schema=public"
 }
 
 
@@ -27,7 +27,8 @@ model Context_Window {
   Id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  chatMessages Json
+  chatEngineMessages Json
+  ChatWindowMessages  Chat_Message[]
   vectorURL String
   fileName String
   fileURL String
@@ -35,5 +36,15 @@ model Context_Window {
   owner User @relation(fields: [ownerId] , references: [Id] , onUpdate: Cascade , onDelete: Cascade)
   ownerId Int
 
+}
+
+model Chat_Message {
+  Id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content String
+  role String
+  ContextWindow Context_Window @relation(fields: [ContextWindowId] , references: [Id] , onUpdate: Cascade , onDelete: Cascade)
+  ContextWindowId Int
 }
 

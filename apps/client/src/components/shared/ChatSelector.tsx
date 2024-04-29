@@ -31,7 +31,7 @@ const ChatSelector = () => {
           <Link
             key={ctx_win.fileKey}
             to={`/chat/${ctx_win.fileKey}`}
-            className={`hover:opacity-100 border-y-[1px] rounded-lg py-[8px] border-black  ${
+            className={`hover:opacity-100 border-[1px] rounded-lg py-[8px] border-black  ${
               id === ctx_win.fileKey ? " bg-primary opacity-100 " : "opacity-75 "
             }`}
           >

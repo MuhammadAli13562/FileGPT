@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { ContextDataType } from "@backend/prisma/selections";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "src/redux/store";
+import { BarLoader, SyncLoader } from "react-spinners";
 
 const FileUploader = () => {
   const [uploadFile, { isLoading: isUploadingFile }] = useUploadDocumentMutation(fixedCacheKey);
@@ -29,21 +30,26 @@ const FileUploader = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div className=" h-[5rem] border-dotted p-4 border-2 border-gray-500 cursor-pointer mb-4 mx-4 mt-2 rounded-lg bg-[#363535] text-white">
+    <div className=" h-[5rem]  p-4 border-2 border-black cursor-pointer mb-4 mx-4 mt-2 rounded-lg bg-[#363535] text-white">
       {!isUploadingFile ? (
         <div {...getRootProps()} className="flex-center">
           <input {...getInputProps()} />
-          <div className="flex flex-col items-center">
-            <p>+ Add Chat</p>
+          <div className="flex flex-col items-center ">
+            <p className="font-bold">+ Add Chat</p>
             {isDragActive ? (
-              <p>Drop the files here ...</p>
+              <p className=" ">Drop the files here ...</p>
             ) : (
-              <p className="text-gray-200">Drop pdf , image or excel here</p>
+              <p className="text-gray-400 leading-[25px]">Drop pdf , image or excel here</p>
             )}
           </div>
         </div>
       ) : (
-        <div className="flex-center">Processing.....</div>
+        <div className="col-center gap-2 font-bold text-gray-300 h-full text-lg">
+          Processing
+          <span>
+            <BarLoader color="black" />
+          </span>
+        </div>
       )}
     </div>
   );

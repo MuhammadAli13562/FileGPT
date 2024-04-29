@@ -8,6 +8,7 @@ export const StreamQuery = async (input: queryInputType, dispatch: any) => {
     fetch(ServerEndpoint + "user/query", {
       method: "POST",
       headers: {
+        token: localStorage.getItem("token") as string,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(input),

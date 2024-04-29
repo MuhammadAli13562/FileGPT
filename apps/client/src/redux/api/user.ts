@@ -9,7 +9,7 @@ export const UserApi = api.injectEndpoints({
         method: "get",
         url: "/user/data",
         headers: {
-          //token: localStorage.getItem("token") || "",
+          token: localStorage.getItem("token") || "",
         },
       }),
       transformResponse: (response: { user: UserDataType }) => {
@@ -21,6 +21,9 @@ export const UserApi = api.injectEndpoints({
       query: (form: FormData) => ({
         method: "post",
         url: "/user/upload",
+        headers: {
+          token: localStorage.getItem("token") || "",
+        },
         body: form,
       }),
       invalidatesTags: ["META"],
@@ -42,7 +45,7 @@ export const UserApi = api.injectEndpoints({
         method: "get",
         url: "/user/meta",
         headers: {
-          //token: localStorage.getItem("token") || "",
+          token: localStorage.getItem("token") || "",
         },
       }),
       providesTags: ["META"],

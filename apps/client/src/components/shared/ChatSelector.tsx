@@ -25,13 +25,13 @@ const ChatSelector = () => {
   if (isLoading) return <>Loading....</>;
   if (isError) return <>Error Occured</>;
   return (
-    <div className="flex flex-col  p-2">
+    <div className="flex flex-col  p-2 gap-4">
       {sortedContextWindowsData.map((ctx_win) => {
         return (
           <Link
             key={ctx_win.fileKey}
             to={`/chat/${ctx_win.fileKey}`}
-            className={`hover:opacity-100 border-t-[1px] py-[8px] border-black  ${
+            className={`hover:opacity-100 border-y-[1px] rounded-lg py-[8px] border-black  ${
               id === ctx_win.fileKey ? " bg-primary opacity-100 " : "opacity-75 "
             }`}
           >
@@ -42,6 +42,15 @@ const ChatSelector = () => {
           </Link>
         );
       })}
+      {sortedContextWindowsData.length === 0 && (
+        <div className="text-[80px] p-4  font-bold font-sans flex flex-col">
+          <span>ADD</span>
+          <span>A</span>
+          <span>FILE</span>
+          <span>TO</span>
+          <span>BEGIN</span>
+        </div>
+      )}
     </div>
   );
 };

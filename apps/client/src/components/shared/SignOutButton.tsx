@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { store } from "src/redux/store";
+import { store, useAppDispatch } from "src/redux/store";
 import { api } from "src/redux/api";
 import signoutlogo from "../../../public/logout.svg";
+import { UserApi } from "src/redux/api/user";
 
 const SignOutButton = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   return (
     <button
@@ -13,7 +15,7 @@ const SignOutButton = () => {
       onClick={() => {
         localStorage.removeItem("token");
         localStorage.removeItem("email");
-        store.dispatch(api.util.resetApiState());
+        dispatch(UserApi.util.resetApiState());
 
         navigate("/sign-in");
         toast.info("User logged out");

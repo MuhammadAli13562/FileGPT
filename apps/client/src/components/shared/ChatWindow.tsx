@@ -2,14 +2,18 @@ import { useParams } from "react-router-dom";
 import { useFetchDataFixedCache } from "src/redux/api/user";
 import { SelectContextWindowById } from "src/redux/selector";
 import { useTypedSelector } from "src/redux/store";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MessageEditor from "./MessageEditor";
 import ChatTopBar from "./ChatTopBar";
 import Markdown from "./Markdown";
 import transformText from "src/lib/transformText";
+import { BeatLoader } from "react-spinners";
+import { useVerificationOnMount } from "src/hooks/useVerificationOnMount";
 
 const ChatWindow = () => {
+  useVerificationOnMount();
   const { id } = useParams();
+  const [isQuerying, setIsQuerying] = useState(false);
   const { isLoading, isError } = useFetchDataFixedCache();
   const ContextWindow = useTypedSelector((state) => SelectContextWindowById(state, id || ""));
   const messagesRef = useRef<HTMLDivElement>(null);
@@ -61,8 +65,15 @@ const ChatWindow = () => {
               </div>
             );
           })}
+        {msg_arr.length === 0 && (
+          <div className="flex-center w-full opacity-55 font-sans text-6xl h-full">
+            Ask a question
+          </div>
+        )}
+        {isQuerying && <BeatLoader color="black" className=" scale-75" />}
       </div>
-      <MessageEditor />
+
+      <MessageEditor setIsQuerying={setIsQuerying} />
     </div>
   );
 };

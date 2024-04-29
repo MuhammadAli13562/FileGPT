@@ -15,6 +15,7 @@ import { RAG_EmbedDocument, RAG_QueryDocument } from "../services/RAG/EmbednQuer
 import { convertFileToText } from "../services/RAG/FileHanding";
 import { QueryDocumentInputType, SendMessageType, StoreChatDataInputType } from "../types/User";
 import { ChatMessage } from "llamaindex";
+import { AuthMiddleware } from "../middleware/AuthMiddleware";
 
 dotenv.config();
 const Bucket = process.env.AWS_BUCKET_NAME;
@@ -37,10 +38,10 @@ const upload = multer({ storage: multerStorage });
 export default function UserController() {
   const router = Router();
 
-  router.get("/data", async (req: Request, res: Response) => {
+  router.get("/data", AuthMiddleware, async (req: Request, res: Response) => {
     try {
-      //const user_email = res.get("email")!;
-      const user = await DB_getUserData("a@a.com");
+      const user_email = res.get("email")!;
+      const user = await DB_getUserData(user_email);
       console.log("user data : ", user);
 
       res.status(200).send({ user });
@@ -49,62 +50,68 @@ export default function UserController() {
     }
   });
 
-  router.post("/upload", upload.single("file"), async (req: Request, res: Response) => {
-    console.log("request : ", req);
-    try {
-      let file = req.file;
-      if (!file) throw Error("No File Provided");
-      const Key = v4();
+  router.post(
+    "/upload",
+    AuthMiddleware,
+    upload.single("file"),
+    async (req: Request, res: Response) => {
+      console.log("request : ", req);
+      try {
+        const user_email = res.get("email")!;
+        let file = req.file;
+        if (!file) throw Error("No File Provided");
+        const Key = v4();
 
-      //----------------------------------------------
-      // File Handling -- Convert all formats to text
+        //----------------------------------------------
+        // File Handling -- Convert all formats to text
 
-      const fileText = await convertFileToText(file);
+        const fileText = await convertFileToText(file);
 
-      //----------------------------------------------
-      // Implement Indexing , Embedding , Logic Here
+        //----------------------------------------------
+        // Implement Indexing , Embedding , Logic Here
 
-      const EmbedDocumentInput = {
-        text: fileText,
-        Key,
-      };
+        const EmbedDocumentInput = {
+          text: fileText,
+          Key,
+        };
 
-      const vectorURL = await RAG_EmbedDocument(EmbedDocumentInput);
+        const vectorURL = await RAG_EmbedDocument(EmbedDocumentInput);
 
-      // //----------------------------------------------
-      // Upload to S3 Logic Here
+        // //----------------------------------------------
+        // Upload to S3
 
-      const PutCommandInput: PutObjectCommandInput = {
-        Bucket,
-        Body: fs.createReadStream(file.path),
-        Key,
-        ContentType: file.mimetype,
-      };
-      await s3.send(new PutObjectCommand(PutCommandInput));
+        const PutCommandInput: PutObjectCommandInput = {
+          Bucket,
+          Body: fs.createReadStream(file.path),
+          Key,
+          ContentType: file.mimetype,
+        };
+        await s3.send(new PutObjectCommand(PutCommandInput));
 
-      //----------------------------------------------
-      //  Create New ContextWindow Data in Prisma Here
+        //----------------------------------------------
+        //  Create New ContextWindow Data in Prisma Here
 
-      const ContextWindowInput = {
-        fileKey: Key,
-        fileName: file.filename,
-        fileURL: BucketLink + Key,
-        vectorURL,
-        email: "a@a.com",
-      };
-      const ContextWindow = await DB_createContextWindow(ContextWindowInput);
+        const ContextWindowInput = {
+          fileKey: Key,
+          fileName: file.filename,
+          fileURL: BucketLink + Key,
+          vectorURL,
+          email: user_email,
+        };
+        const ContextWindow = await DB_createContextWindow(ContextWindowInput);
 
-      // //----------------------------------------------
-      // //  Clean Up & Return
+        // //----------------------------------------------
+        // //  Clean Up & Return
 
-      await unlinkFile(file.path); // delete file from local disc
-      res.status(200).send({ ContextWindow });
-    } catch (error: any) {
-      res.status(404).send({ message: error.message });
+        await unlinkFile(file.path); // delete file from local disc
+        res.status(200).send({ ContextWindow });
+      } catch (error: any) {
+        res.status(404).send({ message: error.message });
+      }
     }
-  });
+  );
 
-  router.post("/query", async (req: Request, res: Response) => {
+  router.post("/query", AuthMiddleware, async (req: Request, res: Response) => {
     try {
       //----------------------------------------------------------------
       // Retreive Context Data From DB
@@ -152,11 +159,10 @@ export default function UserController() {
       res.status(404).send({ message: error.message });
     }
   });
-  router.get("/meta", async (req: Request, res: Response) => {
+  router.get("/meta", AuthMiddleware, async (req: Request, res: Response) => {
     try {
-      //const user_email = res.get("email")!;
-      const user = await DB_getUserMetaData("a@a.com");
-      console.log("user meta data : ", user);
+      const user_email = res.get("email")!;
+      const user = await DB_getUserMetaData(user_email);
 
       res.status(200).send({ user });
     } catch (error: any) {

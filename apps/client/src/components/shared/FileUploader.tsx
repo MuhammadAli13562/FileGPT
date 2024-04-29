@@ -1,29 +1,26 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { fixedCacheKey } from "src/constants";
-import { useUploadDocumentMutation } from "src/redux/api/user";
+import { UserApi, useUploadDocumentMutation } from "src/redux/api/user";
 import { toast } from "react-toastify";
 import { ContextDataType } from "@backend/prisma/selections";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "src/redux/store";
 
 const FileUploader = () => {
   const [uploadFile, { isLoading: isUploadingFile }] = useUploadDocumentMutation(fixedCacheKey);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const onDrop = useCallback(async (acceptedFiles: any) => {
     try {
-      console.log("accepted files : ", acceptedFiles);
-
       const form = new FormData();
       const file = acceptedFiles[0];
-      console.log("accepted files 2: ", file);
 
       form.append("file", file);
       const res: ContextDataType = await uploadFile(form).unwrap();
+      dispatch(UserApi.util.invalidateTags(["META"]));
       navigate(`/chat/${res.fileKey}`);
-      console.log("check resp : ", res);
     } catch (error: any) {
-      console.log("error here : ", error);
-
       toast.error(`Error : ${error.message || "Upload Failed"}!`, {
         position: "top-center",
       });

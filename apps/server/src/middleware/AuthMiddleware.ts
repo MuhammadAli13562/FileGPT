@@ -12,6 +12,8 @@ export const AuthMiddleware = async (req: Request, res: Response, next: NextFunc
     res.set("email", email);
     next();
   } catch (error: any) {
+    console.log("authmid : ", error.message);
+
     res.status(401).send({ message: error.message });
   }
 };

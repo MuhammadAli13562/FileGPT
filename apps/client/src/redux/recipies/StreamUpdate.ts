@@ -1,7 +1,6 @@
 import { fixedCacheKey } from "src/constants";
 import { UserApi } from "../api/user";
 import { v4 } from "uuid";
-import { current } from "@reduxjs/toolkit";
 import uuidToNumber from "src/lib/uuid2num";
 
 export const sendMessage = ({ id, message }: { id: number; message: string }) => {
@@ -15,8 +14,6 @@ export const sendMessage = ({ id, message }: { id: number; message: string }) =>
       Id: uuidToNumber(v4()),
       role: "user",
     };
-    console.log("curr snd msg : ", current(ctxwin));
-    console.log("send new msg : ", new_msg);
 
     if (ctxwin) ctxwin.ChatWindowMessages.push(new_msg);
   });

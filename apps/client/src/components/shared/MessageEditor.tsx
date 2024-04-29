@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { StreamQuery } from "src/query";
@@ -6,7 +6,11 @@ import { sendMessage } from "src/redux/recipies/StreamUpdate";
 import { SelectContextWindowById } from "src/redux/selector";
 import { useAppDispatch, useTypedSelector } from "src/redux/store";
 
-function MessageEditor() {
+function MessageEditor({
+  setIsQuerying,
+}: {
+  setIsQuerying: React.Dispatch<SetStateAction<boolean>>;
+}) {
   const { id } = useParams();
   const [value, setValue] = useState("");
   const ContextWindow = useTypedSelector((state) => SelectContextWindowById(state, id || ""));
@@ -26,18 +30,28 @@ function MessageEditor() {
     setValue("");
     if (!ContextWindow?.Id) return;
     try {
+      setIsQuerying(true);
       dispatch(sendMessage({ id: ContextWindow.Id, message: newmsg }));
       await StreamQuery({ id: ContextWindow.Id, message: newmsg }, dispatch);
     } catch (error: any) {
       toast.error(`Error : ${error.message} `, {
         position: "top-center",
       });
+    } finally {
+      setIsQuerying(false);
     }
   };
-
+  const handleKeyDown = (e: any) => {
+    if (e.key === "Enter" && !e.ctrlKey) {
+      e.preventDefault();
+      handleSendMessage();
+    } else if (e.key === "Enter" && e.ctrlKey) {
+    }
+  };
   return (
     <div className=" flex justify-center items-end pb-8 absolute bottom-0 w-full bg-white pt-2">
       <textarea
+        onKeyDown={handleKeyDown}
         placeholder="Ask any question"
         value={value}
         onChange={handleChange}

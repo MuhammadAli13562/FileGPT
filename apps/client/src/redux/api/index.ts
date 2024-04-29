@@ -1,9 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ServerEndpoint } from "../../constants";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: ServerEndpoint,
+    baseUrl: "https://chatapp.ali-98-ec2-backend.click/",
   }),
   tagTypes: ["META"],
   endpoints: () => ({}),

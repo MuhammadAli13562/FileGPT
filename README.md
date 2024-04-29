@@ -24,6 +24,9 @@
 - PostgreSQL
 - Amazon S3
 
+# System Design
+
+![design2](https://github.com/MuhammadAli13562/taxprogpt/assets/40227926/52e563d9-76f5-4c0b-aa96-3e8f29de6c20)
 
 
 # Landing Page

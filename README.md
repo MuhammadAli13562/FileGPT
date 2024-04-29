@@ -23,3 +23,13 @@
 
 - PostgreSQL
 - Amazon S3
+
+
+
+# Landing Page
+
+![landing](https://github.com/MuhammadAli13562/taxprogpt/assets/40227926/a88b5468-bc62-4bd3-a8d0-d713f6c1b856)
+
+
+# Demo Snapshot
+![Screenshot from 2024-04-29 17-03-58](https://github.com/MuhammadAli13562/taxprogpt/assets/40227926/a48881b6-dfd0-4680-8a2e-0380df6f54d8)

@@ -5,7 +5,11 @@ export const ContextSelect = {
   createdAt: true,
   updatedAt: true,
   chatEngineMessages: true,
-  ChatWindowMessages: true,
+  ChatWindowMessages: {
+    orderBy: {
+      createdAt: "asc",
+    },
+  },
   vectorURL: true,
   fileName: true,
   fileURL: true,

@@ -15,6 +15,17 @@ const ChatWindow = () => {
   const messagesRef = useRef<HTMLDivElement>(null);
 
   const message_array = ContextWindow?.ChatWindowMessages;
+  let msg_arr = message_array
+    ? [...message_array].sort((a, b) => {
+        const createdAtComparison =
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        if (createdAtComparison === 0) {
+          // If 'created at' is equal, compare by 'Id'
+          return a.Id - b.Id;
+        }
+        return createdAtComparison;
+      })
+    : [];
 
   useEffect(() => {
     if (messagesRef.current) messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
@@ -30,8 +41,8 @@ const ChatWindow = () => {
         ref={messagesRef}
         className="px-10 w-full flex flex-col gap-4 h-[90vh] overflow-y-auto  pt-24"
       >
-        {message_array &&
-          message_array.map((msg, index) => {
+        {msg_arr &&
+          msg_arr.map((msg, index) => {
             return (
               <div
                 key={msg.Id}

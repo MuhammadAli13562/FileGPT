@@ -151,6 +151,7 @@ export default function UserController() {
       res.status(404).send({ message: error.message });
     }
   });
+  router.get("/");
 
   return router;
 }

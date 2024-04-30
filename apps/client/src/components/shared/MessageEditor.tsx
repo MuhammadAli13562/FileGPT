@@ -62,7 +62,7 @@ function MessageEditor({
         rows={1}
       />
       <button
-        disabled={value === "" || isQuerying}
+        disabled={value.trim() === "" || isQuerying}
         onClick={handleSendMessage}
         className=" -ml-10 flex items-center justify-center bg-primary text-white rounded p-2 focus:outline-none focus:ring-2 "
         style={{ width: "40px", height: "40px" }}

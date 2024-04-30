@@ -78,7 +78,7 @@ const ChatWindow = () => {
         {isQuerying && <BeatLoader color="black" className=" scale-75" />}
       </div>
 
-      <MessageEditor setIsQuerying={setIsQuerying} />
+      <MessageEditor isQuerying={isQuerying} setIsQuerying={setIsQuerying} />
     </div>
   );
 };

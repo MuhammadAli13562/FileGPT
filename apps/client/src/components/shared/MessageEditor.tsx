@@ -44,7 +44,7 @@ function MessageEditor({
     }
   };
   const handleKeyDown = (e: any) => {
-    if (e.key === "Enter" && !e.ctrlKey) {
+    if (e.key === "Enter" && !e.ctrlKey && value.trim() !== "") {
       e.preventDefault();
       handleSendMessage();
     } else if (e.key === "Enter" && e.ctrlKey) {

@@ -36,3 +36,6 @@
 
 # Demo Snapshot
 ![ex](https://github.com/MuhammadAli13562/taxprogpt/assets/40227926/9c99fa79-c6d8-4876-a651-195f6c648d7d)
+
+
+### - Docker compose Config for whole app coming soon...

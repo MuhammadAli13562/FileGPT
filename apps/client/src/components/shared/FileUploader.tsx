@@ -30,7 +30,7 @@ const FileUploader = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div className=" h-[5rem]  p-4 border-2 border-black cursor-pointer mb-4 mx-4 mt-2 rounded-lg bg-[#363535] text-white">
+    <div className=" min-h-[5rem]  p-4 border-2 border-black cursor-pointer mb-4 mx-4 mt-2 rounded-lg bg-[#363535] text-white">
       {!isUploadingFile ? (
         <div {...getRootProps()} className="flex-center">
           <input {...getInputProps()} />

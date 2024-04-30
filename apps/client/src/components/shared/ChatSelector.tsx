@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { useFetchDataFixedCache } from "src/redux/api/user";
 import { SelectAllContextWindows } from "src/redux/selector";
 import { useTypedSelector } from "src/redux/store";
+import SkeletonChatSelector from "../skeletons/Skeleton.ChatSelector";
 
 const ChatSelector = () => {
   const { id } = useParams();
@@ -22,7 +23,7 @@ const ChatSelector = () => {
     return 0; // Dates are equal
   });
 
-  if (isLoading) return <>Loading....</>;
+  if (isLoading) return <SkeletonChatSelector />;
   if (isError) return <>Error Occured</>;
   return (
     <div className="flex flex-col  p-2 gap-4">

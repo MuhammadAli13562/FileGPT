@@ -7,7 +7,7 @@ import MessageEditor from "./MessageEditor";
 import ChatTopBar from "./ChatTopBar";
 import Markdown from "./Markdown";
 import transformText from "src/lib/transformText";
-import { BeatLoader } from "react-spinners";
+import { BeatLoader, RotateLoader } from "react-spinners";
 import { useVerificationOnMount } from "src/hooks/useVerificationOnMount";
 
 const ChatWindow = () => {
@@ -35,7 +35,12 @@ const ChatWindow = () => {
     if (messagesRef.current) messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
   }, [ContextWindow]);
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading)
+    return (
+      <div className="h-full w-full col-center">
+        <RotateLoader color="black" />
+      </div>
+    );
   if (isError) return <>Error</>;
 
   return (

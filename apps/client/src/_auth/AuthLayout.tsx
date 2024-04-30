@@ -4,11 +4,11 @@ import logo from "../../public/TaxPro.png";
 const AuthLayout = () => {
   return (
     <div className="w-full h-screen flex-center text-black  bg-[#FAF7F5]">
-      <div className="flex-center gap-52 w-full h-full ">
-        <section className=" col-center">
+      <div className="  w-full h-full flex items-center">
+        <section className="  w-1/2 flex justify-end">
           <img src={logo} className="h-1/2" />
         </section>
-        <section className="flex  justify-center items-center flex-col py-10">
+        <section className="col-center w-1/2  py-10">
           <Outlet />
         </section>
       </div>

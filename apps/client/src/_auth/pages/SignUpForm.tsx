@@ -64,7 +64,7 @@ const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input className="form-field" placeholder="M Ali" {...field} />
+                  <Input className="form-field" placeholder="Ali" {...field} />
                 </FormControl>
                 <FormDescription></FormDescription>
                 <FormMessage />

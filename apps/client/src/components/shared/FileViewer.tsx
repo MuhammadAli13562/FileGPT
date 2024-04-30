@@ -3,6 +3,7 @@ import { useFetchMetaDataFixedCache } from "src/redux/api/user";
 import { SelectMetaContextWindowById } from "src/redux/selector";
 import { useTypedSelector } from "src/redux/store";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { RotateLoader } from "react-spinners";
 
 const FileViewer = () => {
   const { id } = useParams();
@@ -10,7 +11,12 @@ const FileViewer = () => {
   const ContextWindow = useTypedSelector((state) => SelectMetaContextWindowById(state, id!));
   const fileUrl = ContextWindow?.fileURL!;
   const docs = [{ uri: fileUrl }];
-  if (isLoading) return <>Loading...</>;
+  if (isLoading)
+    return (
+      <div className="h-full w-full col-center">
+        <RotateLoader color="black" />
+      </div>
+    );
   if (isError) return <>Error</>;
 
   const FileViewerConfig = {

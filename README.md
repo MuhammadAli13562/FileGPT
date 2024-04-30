@@ -35,4 +35,7 @@
 
 
 # Demo Snapshot
-![final](https://github.com/MuhammadAli13562/taxprogpt/assets/40227926/a2de8395-3dc7-43f5-8e47-45ff43d86167)
+![ex](https://github.com/MuhammadAli13562/taxprogpt/assets/40227926/9c99fa79-c6d8-4876-a651-195f6c648d7d)
+
+
+### - Docker compose Config for whole app coming soon...

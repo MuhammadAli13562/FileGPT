@@ -8,7 +8,9 @@ import { useAppDispatch, useTypedSelector } from "src/redux/store";
 
 function MessageEditor({
   setIsQuerying,
+  isQuerying,
 }: {
+  isQuerying: boolean;
   setIsQuerying: React.Dispatch<SetStateAction<boolean>>;
 }) {
   const { id } = useParams();
@@ -60,6 +62,7 @@ function MessageEditor({
         rows={1}
       />
       <button
+        disabled={value === "" || isQuerying}
         onClick={handleSendMessage}
         className=" -ml-10 flex items-center justify-center bg-primary text-white rounded p-2 focus:outline-none focus:ring-2 "
         style={{ width: "40px", height: "40px" }}

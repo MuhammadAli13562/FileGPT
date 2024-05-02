@@ -33,14 +33,14 @@ const ChatSelector = () => {
 
         return (
           <div
-            className={`flex justify-between relative border-black border-[1px] rounded-lg xl:py-3 ${
+            className={`flex justify-between relative border-black border-[1px] rounded-lg  ${
               IsSelected ? "bg-black" : ""
             }`}
           >
             <Link
               key={ctx_win.fileKey}
               to={`/chat/${ctx_win.fileKey}`}
-              className={`hover:opacity-100  2xl:py-[8px]  ${
+              className={`hover:opacity-100 xl:py-3  flex-1 2xl:py-[14px]  ${
                 IsSelected ? "  opacity-100 " : "opacity-75 "
               }`}
             >

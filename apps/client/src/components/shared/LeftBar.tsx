@@ -8,7 +8,7 @@ const LeftBar = () => {
     <div className="flex flex-col bg-[#524e4c] text-black h-screen p-2">
       <FileUploader />
       <ChatSelector />
-      <div className="absolute bottom-0 flex-between w-full px-4 mb-2 bg-[#524e4c] ">
+      <div className="absolute bottom-0 flex-between w-full px-4 pr-6 mb-2 bg-[#524e4c] ">
         <SignOutButton />
         <SwitchButton />
       </div>

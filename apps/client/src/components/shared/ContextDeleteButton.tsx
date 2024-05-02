@@ -12,16 +12,17 @@ import {
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserApi, useDeleteContextFixedCache } from "src/redux/api/user";
+import { useAppDispatch } from "src/redux/store";
 
 const ContextDeleteButton = ({ IsSelected, Id }: { IsSelected: boolean; Id: string }) => {
   const [deleteContext] = useDeleteContextFixedCache();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const handleDelete = async () => {
     try {
       await deleteContext(Id);
       navigate("/chat/default");
-
-      UserApi.util.invalidateTags(["META"]);
+      dispatch(UserApi.util.invalidateTags(["META"]));
     } catch (error) {
       toast.error("Failed to Delete");
     }

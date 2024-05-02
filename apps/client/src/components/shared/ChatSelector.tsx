@@ -27,13 +27,13 @@ const ChatSelector = () => {
   if (isLoading) return <SkeletonChatSelector />;
   if (isError) return <>Error Occured</>;
   return (
-    <div className="flex flex-col  p-2 gap-4 ">
+    <div className="flex flex-col  p-2 gap-4 overflow-auto mb-12">
       {sortedContextWindowsData.map((ctx_win) => {
         const IsSelected = id === ctx_win.fileKey;
 
         return (
           <div
-            className={` relative border-black border-[1px] rounded-lg py-3 ${
+            className={` relative border-black border-[1px] rounded-lg xl:py-3 ${
               IsSelected ? "bg-black" : ""
             }`}
           >
@@ -54,7 +54,7 @@ const ChatSelector = () => {
         );
       })}
       {sortedContextWindowsData.length === 0 && (
-        <div className="text-[80px] p-4  font-sans font-thin flex flex-col">
+        <div className="text-[30px] md:text-[40px] lg:text-[60px] xl:text-[70px]  2xl:text-[80px] p-4  font-sans font-thin flex flex-col">
           <span>ADD</span>
           <span>A</span>
           <span>FILE</span>

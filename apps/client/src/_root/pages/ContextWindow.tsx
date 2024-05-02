@@ -11,7 +11,7 @@ const ContextWindow = () => {
   return (
     <div className="relative">
       <ResizablePanelGroup direction="horizontal" className="">
-        <ResizablePanel defaultSize={20} className=" h-screen">
+        <ResizablePanel defaultSize={20} className=" h-screen min-w-56">
           <ScrollArea>
             <LeftBar />
           </ScrollArea>

@@ -27,13 +27,13 @@ export const RAG_EmbedDocument = async (EmbedDocumentInput: EmbedDocumentInputTy
     const document = new Document({ text });
     const EmbedPath = path.resolve(__dirname, `./storage/${Key}`);
 
-    const vectorStore = new QdrantVectorStore({
-      url: "http://localhost:6333",
+    const storageContext = await storageContextFromDefaults({
+      persistDir: EmbedPath,
     });
 
     // this command will create embeddings using openAI Model
     const res = await VectorStoreIndex.fromDocuments([document], {
-      vectorStore,
+      storageContext,
     });
 
     console.log("vec store : ", res.indexStruct);
@@ -51,21 +51,12 @@ export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputTy
   try {
     const { vectorURL, message, res, chatEngineMessages } = QueryDocumentInput;
 
-    // const storageContext = await storageContextFromDefaults({
-    //   persistDir: vectorURL,
-    // });
-    const vectorStore = new QdrantVectorStore({
-      url: "http://localhost:6333",
+    const storageContext = await storageContextFromDefaults({
+      persistDir: vectorURL,
     });
 
-    const indexStruct = await BaseIndexStore;
-
     const index = await VectorStoreIndex.init({
-      vectorStore,
-      indexStruct: new IndexStruct({
-        indexId: "ea947bf2-85b6-4853-b198-5e5c1855cfe9",
-        type: IndexStructType.SIMPLE_DICT,
-      }),
+      storageContext,
     });
 
     const retriever = index.asRetriever();

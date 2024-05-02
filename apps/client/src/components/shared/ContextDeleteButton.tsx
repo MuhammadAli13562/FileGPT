@@ -28,7 +28,7 @@ const ContextDeleteButton = ({ IsSelected, Id }: { IsSelected: boolean; Id: stri
     }
   };
   return (
-    <div className="absolute right-0  top-0 h-full col-center z-20 p-2">
+    <div className=" h-full col-center z-20 p-2">
       <AlertDialog>
         <AlertDialogTrigger>
           <button className="p-2">

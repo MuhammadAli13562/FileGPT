@@ -33,18 +33,18 @@ const ChatSelector = () => {
 
         return (
           <div
-            className={` relative border-black border-[1px] rounded-lg xl:py-3 ${
+            className={`flex justify-between relative border-black border-[1px] rounded-lg xl:py-3 ${
               IsSelected ? "bg-black" : ""
             }`}
           >
             <Link
               key={ctx_win.fileKey}
               to={`/chat/${ctx_win.fileKey}`}
-              className={`hover:opacity-100  py-[8px]  ${
+              className={`hover:opacity-100  2xl:py-[8px]  ${
                 IsSelected ? "  opacity-100 " : "opacity-75 "
               }`}
             >
-              <div className="p-4 text-[#FAF7F5]  font-thin leading-3 flex-start small-regular rounded-xl">
+              <div className="p-2 text-[#FAF7F5]  font-thin leading-3 flex-start small-regular rounded-xl">
                 {ctx_win.fileName.slice(0, 40)}
                 {ctx_win.fileName.length > 40 && "....."}
               </div>

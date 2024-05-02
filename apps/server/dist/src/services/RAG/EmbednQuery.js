@@ -68,11 +68,11 @@ const RAG_QueryDocument = (QueryDocumentInput) => __awaiter(void 0, void 0, void
         const stream = yield chatEngine.chat({
             message: `
 
-      Instructions : For below query , Be succinct in your response and hide any sensitive information like social security numbers , credit card numbers etc but not the names and usual information that is not sensitive.
+      Instructions: Please provide a concise response to the following query. Ensure that any sensitive information, such as social security numbers or credit card numbers, is redacted. However, please retain non-sensitive information such as names and other usual details.
 
-       --------------------------------------------
-          query : ${message}
-       --------------------------------------------
+      --------------------------------------------
+      Query: ${message}
+      --------------------------------------------
       `,
             stream: true,
         });

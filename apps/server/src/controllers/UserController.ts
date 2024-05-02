@@ -1,6 +1,7 @@
 import { Response, Request, Router } from "express";
 import {
   DB_createContextWindow,
+  DB_deleteContextWindow,
   DB_getContextData,
   DB_getUserData,
   DB_getUserMetaData,
@@ -55,7 +56,6 @@ export default function UserController() {
     AuthMiddleware,
     upload.single("file"),
     async (req: Request, res: Response) => {
-      console.log("request : ", req);
       try {
         const user_email = res.get("email")!;
         let file = req.file;
@@ -121,7 +121,7 @@ export default function UserController() {
       if (!id || !message) throw Error("Incomplete Information");
 
       const Id = Number(id);
-      const { ChatWindowMessages, chatEngineMessages, vectorURL } = await DB_getContextData(Id);
+      const { chatEngineMessages, vectorURL } = await DB_getContextData(Id);
 
       //----------------------------------------------------------------
       // Query Document With Message which streams response and returns new Chat Messages
@@ -165,6 +165,17 @@ export default function UserController() {
       const user = await DB_getUserMetaData(user_email);
 
       res.status(200).send({ user });
+    } catch (error: any) {
+      res.status(404).send({ message: error.message });
+    }
+  });
+
+  router.delete("/delete", AuthMiddleware, async (req: Request, res: Response) => {
+    try {
+      const { id } = req.body as { id: string };
+      const Id = Number(id);
+      await DB_deleteContextWindow(Id);
+      res.status(200).send({ message: "Deleted Successfuly" });
     } catch (error: any) {
       res.status(404).send({ message: error.message });
     }

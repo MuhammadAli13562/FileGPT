@@ -105,7 +105,7 @@ function UserController() {
             if (!id || !message)
                 throw Error("Incomplete Information");
             const Id = Number(id);
-            const { ChatWindowMessages, chatEngineMessages, vectorURL } = yield (0, UserService_1.DB_getContextData)(Id);
+            const { chatEngineMessages, vectorURL } = yield (0, UserService_1.DB_getContextData)(Id);
             //----------------------------------------------------------------
             // Query Document With Message which streams response and returns new Chat Messages
             const QueryDocumentInput = {
@@ -140,6 +140,17 @@ function UserController() {
             const user_email = res.get("email");
             const user = yield (0, UserService_1.DB_getUserMetaData)(user_email);
             res.status(200).send({ user });
+        }
+        catch (error) {
+            res.status(404).send({ message: error.message });
+        }
+    }));
+    router.delete("/delete", AuthMiddleware_1.AuthMiddleware, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { id } = req.body;
+            const Id = Number(id);
+            yield (0, UserService_1.DB_deleteContextWindow)(Id);
+            res.status(200).send({ message: "Deleted Successfuly" });
         }
         catch (error) {
             res.status(404).send({ message: error.message });

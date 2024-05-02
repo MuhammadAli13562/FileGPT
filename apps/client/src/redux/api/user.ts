@@ -40,6 +40,18 @@ export const UserApi = api.injectEndpoints({
         );
       },
     }),
+    deleteContext: builder.mutation<any | string, any>({
+      query: (Id: string) => ({
+        method: "delete",
+        url: "/user/delete",
+        headers: {
+          token: localStorage.getItem("token") || "",
+        },
+        body: { id: Id },
+      }),
+      invalidatesTags: ["META"],
+    }),
+
     fetchMetaData: builder.query<UserMetaDataType, void>({
       query: () => ({
         method: "get",
@@ -57,8 +69,15 @@ export const UserApi = api.injectEndpoints({
   }),
 });
 
-export const { useFetchDataQuery, useUploadDocumentMutation, useFetchMetaDataQuery } = UserApi;
+export const {
+  useFetchDataQuery,
+  useUploadDocumentMutation,
+  useDeleteContextMutation,
+  useFetchMetaDataQuery,
+} = UserApi;
 
 export const useFetchDataFixedCache = () => useFetchDataQuery(fixedCacheKey);
 
 export const useFetchMetaDataFixedCache = () => useFetchMetaDataQuery(fixedCacheKey);
+
+export const useDeleteContextFixedCache = () => useDeleteContextMutation(fixedCacheKey);

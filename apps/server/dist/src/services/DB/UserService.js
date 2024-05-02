@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DB_getUserMetaData = exports.DB_storeChatData = exports.DB_getContextData = exports.DB_createContextWindow = exports.DB_getUserData = void 0;
+exports.DB_deleteContextWindow = exports.DB_getUserMetaData = exports.DB_storeChatData = exports.DB_getContextData = exports.DB_createContextWindow = exports.DB_getUserData = void 0;
 const client_1 = require("@prisma/client");
 const client_2 = __importDefault(require("../../prisma/client"));
 const selections_1 = require("../../prisma/selections");
@@ -138,3 +138,21 @@ const DB_getUserMetaData = (email) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.DB_getUserMetaData = DB_getUserMetaData;
+const DB_deleteContextWindow = (Id) => __awaiter(void 0, void 0, void 0, function* () {
+    console.clear();
+    try {
+        yield client_2.default.context_Window.delete({
+            where: {
+                Id,
+            },
+        });
+    }
+    catch (error) {
+        if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+            if (error.code === "P1001")
+                error.message = "Database Down";
+        }
+        throw Error(error.message);
+    }
+});
+exports.DB_deleteContextWindow = DB_deleteContextWindow;

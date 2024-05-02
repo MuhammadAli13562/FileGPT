@@ -2,7 +2,6 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/client";
 import { ContextWindowType, StoreChatDataInputType } from "../../types/User";
 import { ContextSelect, UserMetaSelect, UserSelect } from "../../prisma/selections";
-import { ChatMessage } from "llamaindex";
 
 export const DB_getUserData = async (email: string) => {
   try {
@@ -103,6 +102,22 @@ export const DB_getUserMetaData = async (email: string) => {
 
     if (user === null) throw Error("No User Found");
     return user;
+  } catch (error: any) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P1001") error.message = "Database Down";
+    }
+    throw Error(error.message);
+  }
+};
+
+export const DB_deleteContextWindow = async (Id: number) => {
+  console.clear();
+  try {
+    await prisma.context_Window.delete({
+      where: {
+        Id,
+      },
+    });
   } catch (error: any) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P1001") error.message = "Database Down";

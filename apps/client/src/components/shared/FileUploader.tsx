@@ -30,10 +30,10 @@ const FileUploader = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div className=" min-h-[5rem]  p-4 border-2 border-black cursor-pointer mb-4 mx-4 mt-2 rounded-lg bg-[#363535] text-white">
+    <div className=" relative min-h-[5rem]  p-4 border-2 border-black  mb-4 mx-4 mt-2 rounded-lg bg-[#363535] text-white">
       {!isUploadingFile ? (
-        <div {...getRootProps()} className="flex-center">
-          <input {...getInputProps()} />
+        <div {...getRootProps()} className="flex-center cursor-pointer text-[17px]">
+          <input className=" " {...getInputProps()} />
           <div className="flex flex-col items-center ">
             <p className="font-bold">+ Add Chat</p>
             {isDragActive ? (

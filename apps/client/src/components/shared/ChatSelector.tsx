@@ -54,7 +54,7 @@ const ChatSelector = () => {
         );
       })}
       {sortedContextWindowsData.length === 0 && (
-        <div className="text-[80px] p-4  font-bold font-sans flex flex-col">
+        <div className="text-[80px] p-4  font-sans font-thin flex flex-col">
           <span>ADD</span>
           <span>A</span>
           <span>FILE</span>

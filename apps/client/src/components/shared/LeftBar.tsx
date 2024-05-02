@@ -1,6 +1,7 @@
 import ChatSelector from "./ChatSelector";
 import FileUploader from "./FileUploader";
 import SignOutButton from "./SignOutButton";
+import SwitchButton from "./SwitchButton";
 
 const LeftBar = () => {
   return (
@@ -9,6 +10,7 @@ const LeftBar = () => {
       <ChatSelector />
       <div className="absolute bottom-0 flex-between w-full px-4 mb-2 bg-[#524e4c] ">
         <SignOutButton />
+        <SwitchButton />
       </div>
     </div>
   );

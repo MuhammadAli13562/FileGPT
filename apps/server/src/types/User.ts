@@ -29,5 +29,5 @@ export interface QueryDocumentInputType {
 export interface StoreChatDataInputType {
   newChatWindowMessages: ChatMessage[];
   newChatEngineMessages: ChatMessage[];
-  Id: number;
+  Id: string;
 }

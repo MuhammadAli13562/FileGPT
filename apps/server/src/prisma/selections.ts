@@ -29,6 +29,7 @@ export const UserSelect = {
   email: true,
   contextWindows: {
     select: ContextSelect,
+    take: 0,
   },
 } satisfies Prisma.UserSelect;
 

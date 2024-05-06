@@ -18,3 +18,5 @@ export const StreamQuery = async (input: queryInputType, dispatch: any) => {
     dispatch(AddMessage({ id: input.id, message: chunk }));
   }
 };
+
+//https://chatapp.ali-98-ec2-backend.click

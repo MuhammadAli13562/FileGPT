@@ -3,10 +3,18 @@ import UserController from "./src/controllers/UserController";
 import AuthController from "./src/controllers/AuthController";
 import cors from "cors";
 const app = express();
+import dotenv from "dotenv";
 
-const PORT = 3000;
+dotenv.config();
+const PORT = process.env.SERVER_PORT;
+const CLIENT_URL = process.env.CLIENT_ORIGIN_URL;
 
-app.use(cors({ exposedHeaders: ["*"] }));
+const corsOptions = {
+  // origin: CLIENT_URL,
+  exposedHeaders: ["*"],
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded());
 
@@ -14,5 +22,5 @@ app.use("/auth", AuthController());
 app.use("/user", UserController());
 
 app.listen(PORT, () => {
-  console.log("Server running on 3000");
+  console.log(`Server running on ${PORT}`);
 });

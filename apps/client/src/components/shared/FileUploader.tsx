@@ -9,7 +9,7 @@ import { useAppDispatch } from "src/redux/store";
 import { BarLoader } from "react-spinners";
 
 const FileUploader = () => {
-  const [uploadFile, { isLoading: isUploadingFile }] = useUploadDocumentMutation(fixedCacheKey);
+  const [uploadFile, { isLoading: isUploadingFile }] = useUploadDocumentMutation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const onDrop = useCallback(async (acceptedFiles: any) => {
@@ -32,10 +32,7 @@ const FileUploader = () => {
   return (
     <div className=" relative p-2 2xl:p-4 border-2 border-black  mb-4 mx-4 mt-2 rounded-lg bg-[#363535] text-white">
       {!isUploadingFile ? (
-        <div
-          {...getRootProps()}
-          className="col-center  flex-center select-none cursor-pointer text-[12px] xl:text-[15px] 2xl:text-[17px]"
-        >
+        <div {...getRootProps()} className="col-center  flex-center select-none cursor-pointer text-[12px] xl:text-[15px] 2xl:text-[17px]">
           <input className=" " {...getInputProps()} />
           <div className="col-center">
             <p className="font-bold">+ Add Chat</p>

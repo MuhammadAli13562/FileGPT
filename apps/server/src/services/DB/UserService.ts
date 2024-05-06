@@ -47,11 +47,11 @@ export const DB_createContextWindow = async (ContextWindowInput: ContextWindowTy
   }
 };
 
-export const DB_getContextData = async (Id: number) => {
+export const DB_getContextData = async (Id: string) => {
   try {
     const contextData = await prisma.context_Window.findUnique({
       where: {
-        Id,
+        fileKey: Id,
       },
       select: ContextSelect,
     });
@@ -72,7 +72,7 @@ export const DB_storeChatData = async (StoreChatDataInput: StoreChatDataInputTyp
   try {
     await prisma.context_Window.update({
       where: {
-        Id,
+        fileKey: Id,
       },
       data: {
         chatEngineMessages: newChatEngineMessages,

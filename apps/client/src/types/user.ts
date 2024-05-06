@@ -1,5 +1,5 @@
 export interface queryInputType {
-  id: number;
+  id: string;
   message: string;
 }
 

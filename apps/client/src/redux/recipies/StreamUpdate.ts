@@ -1,31 +1,35 @@
-import { fixedCacheKey } from "src/constants";
 import { UserApi } from "../api/user";
 import { v4 } from "uuid";
 import uuidToNumber from "src/lib/uuid2num";
 import { ContextDataType } from "@backend/prisma/selections";
 
-export const sendMessage = ({ id, message }: { id: number; message: string }) => {
-  return UserApi.util.updateQueryData("fetchData", fixedCacheKey, (draft) => {
+export const sendMessage = ({ id, message }: { id: string; message: string }) => {
+  console.log("sent message called");
+
+  return UserApi.util.updateQueryData("fetchData", undefined, (draft) => {
     const ctxwin: ContextDataType | undefined = draft.contextWindows.find(
-      (ctx: ContextDataType) => ctx.Id === id
+      (ctx: ContextDataType) => ctx.fileKey === id
     );
+
+    if (!ctxwin) return;
+
     const new_msg = {
       content: message,
-      ContextWindowId: id,
+      ContextWindowId: ctxwin?.Id,
       createdAt: new Date(),
       updatedAt: new Date(),
       Id: uuidToNumber(v4()),
       role: "user",
     };
 
-    if (ctxwin) ctxwin.ChatWindowMessages.push(new_msg);
+    ctxwin.ChatWindowMessages.push(new_msg);
   });
 };
 
-export const AddMessage = ({ id, message }: { id: number; message: string }) => {
-  return UserApi.util.updateQueryData("fetchData", fixedCacheKey, (draft) => {
+export const AddMessage = ({ id, message }: { id: string; message: string }) => {
+  return UserApi.util.updateQueryData("fetchData", undefined, (draft) => {
     const ctxwin: ContextDataType | undefined = draft.contextWindows.find(
-      (ctx: ContextDataType) => ctx.Id === id
+      (ctx: ContextDataType) => ctx.fileKey === id
     );
     if (ctxwin) {
       const last_msg = ctxwin.ChatWindowMessages[ctxwin.ChatWindowMessages.length - 1];
@@ -35,7 +39,7 @@ export const AddMessage = ({ id, message }: { id: number; message: string }) => 
       } else {
         const new_msg = {
           content: message,
-          ContextWindowId: id,
+          ContextWindowId: ctxwin.Id,
           createdAt: new Date(),
           updatedAt: new Date(),
           Id: uuidToNumber(v4()),

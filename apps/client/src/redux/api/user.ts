@@ -1,4 +1,3 @@
-import { fixedCacheKey } from "src/constants";
 import { api } from ".";
 import { ContextDataType, UserDataType, UserMetaDataType } from "@backend/prisma/selections";
 
@@ -15,6 +14,30 @@ export const UserApi = api.injectEndpoints({
       transformResponse: (response: { user: UserDataType }) => {
         console.log("user : ", response);
         return response.user;
+      },
+    }),
+    fetchContextData: builder.query<ContextDataType, string>({
+      query: (id: string) => ({
+        method: "get",
+        url: `/user/data/${id}`,
+        headers: {
+          token: localStorage.getItem("token") || "",
+        },
+      }),
+      transformResponse: (response: { ContextWindow: ContextDataType }) => {
+        console.log("fetchctx : ", response);
+
+        return response.ContextWindow;
+      },
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        const res = (await queryFulfilled).data;
+        console.log("res id : ", res);
+
+        dispatch(
+          UserApi.util.updateQueryData("fetchData", undefined, (draft: UserDataType) => {
+            draft.contextWindows.push(res);
+          })
+        );
       },
     }),
     uploadDocument: builder.mutation<any | string, any>({
@@ -34,7 +57,7 @@ export const UserApi = api.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         const res = await queryFulfilled;
         dispatch(
-          UserApi.util.updateQueryData("fetchData", fixedCacheKey, (draft: UserDataType) => {
+          UserApi.util.updateQueryData("fetchData", undefined, (draft: UserDataType) => {
             draft.contextWindows.push(res.data);
           })
         );
@@ -51,7 +74,6 @@ export const UserApi = api.injectEndpoints({
       }),
       invalidatesTags: ["META"],
     }),
-
     fetchMetaData: builder.query<UserMetaDataType, void>({
       query: () => ({
         method: "get",
@@ -69,15 +91,12 @@ export const UserApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useFetchDataQuery,
-  useUploadDocumentMutation,
-  useDeleteContextMutation,
-  useFetchMetaDataQuery,
-} = UserApi;
+export const { useFetchDataQuery, useUploadDocumentMutation, useDeleteContextMutation, useFetchMetaDataQuery, useFetchContextDataQuery } = UserApi;
 
-export const useFetchDataFixedCache = () => useFetchDataQuery(fixedCacheKey);
+export const useFetchDataFixedCache = () => useFetchDataQuery();
 
-export const useFetchMetaDataFixedCache = () => useFetchMetaDataQuery(fixedCacheKey);
+export const useFetchMetaDataFixedCache = () => useFetchMetaDataQuery();
 
-export const useDeleteContextFixedCache = () => useDeleteContextMutation(fixedCacheKey);
+export const useDeleteContextFixedCache = () => useDeleteContextMutation();
+
+export const useFetchContextFixedCache = (id: string) => useFetchContextDataQuery(id);

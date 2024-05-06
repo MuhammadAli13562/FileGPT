@@ -50,111 +50,11 @@ export default function UserController() {
       res.status(404).send({ message: error.message });
     }
   });
-
-  router.post(
-    "/upload",
-    AuthMiddleware,
-    upload.single("file"),
-    async (req: Request, res: Response) => {
-      try {
-        const user_email = res.get("email")!;
-        let file = req.file;
-        if (!file) throw Error("No File Provided");
-        const Key = v4();
-
-        //----------------------------------------------
-        // File Handling -- Convert all formats to text
-
-        const fileText = await convertFileToText(file);
-
-        //----------------------------------------------
-        // Implement Indexing , Embedding , Logic Here
-
-        const EmbedDocumentInput = {
-          text: fileText,
-          Key,
-        };
-
-        const vectorURL = await RAG_EmbedDocument(EmbedDocumentInput);
-
-        // //----------------------------------------------
-        // Upload to S3
-
-        const PutCommandInput: PutObjectCommandInput = {
-          Bucket,
-          Body: fs.createReadStream(file.path),
-          Key,
-          ContentType: file.mimetype,
-        };
-        await s3.send(new PutObjectCommand(PutCommandInput));
-
-        //----------------------------------------------
-        //  Create New ContextWindow Data in Prisma Here
-
-        const ContextWindowInput = {
-          fileKey: Key,
-          fileName: file.filename,
-          fileURL: BucketLink + Key,
-          vectorURL,
-          email: user_email,
-        };
-        const ContextWindow = await DB_createContextWindow(ContextWindowInput);
-
-        // //----------------------------------------------
-        // //  Clean Up & Return
-
-        await unlinkFile(file.path); // delete file from local disc
-        res.status(200).send({ ContextWindow });
-      } catch (error: any) {
-        res.status(404).send({ message: error.message });
-      }
-    }
-  );
-
-  router.post("/query", AuthMiddleware, async (req: Request, res: Response) => {
+  router.get("/data/:id", AuthMiddleware, async (req: Request, res: Response) => {
     try {
-      //----------------------------------------------------------------
-      // Retreive Context Data From DB
-      console.log(req.body);
-
-      const { id, message } = req.body as SendMessageType;
-      if (!id || !message) throw Error("Incomplete Information");
-
-      const Id = Number(id);
-      const { chatEngineMessages, vectorURL } = await DB_getContextData(Id);
-
-      //----------------------------------------------------------------
-      // Query Document With Message which streams response and returns new Chat Messages
-
-      const QueryDocumentInput: QueryDocumentInputType = {
-        res,
-        message,
-        vectorURL,
-        chatEngineMessages: chatEngineMessages as ChatMessage[],
-      };
-      const { newChatEngineMessages, newChatWindowMessage } = await RAG_QueryDocument(
-        QueryDocumentInput
-      );
-
-      const newChatWindowMessages: ChatMessage[] = [
-        { content: message, role: "user" },
-        { content: newChatWindowMessage, role: "assistant" },
-      ];
-
-      //----------------------------------------------------------------
-      // Update Context Window in DB with New Chat Messages
-
-      const StoreChatDataInput: StoreChatDataInputType = {
-        newChatWindowMessages,
-        newChatEngineMessages,
-        Id,
-      };
-      await DB_storeChatData(StoreChatDataInput);
-
-      //----------------------------------------------------------------
-      // End the Response
-
-      res.end();
+      const id = req.params.id;
+      const ContextWindow = await DB_getContextData(id);
+      res.status(200).send({ ContextWindow });
     } catch (error: any) {
       res.status(404).send({ message: error.message });
     }
@@ -169,7 +69,106 @@ export default function UserController() {
       res.status(404).send({ message: error.message });
     }
   });
+  router.post("/query", AuthMiddleware, async (req: Request, res: Response) => {
+    try {
+      //----------------------------------------------------------------
+      // Retreive Context Data From DB
 
+      const { id, message } = req.body as SendMessageType;
+      if (!id || !message) throw Error("Incomplete Information");
+
+      const { chatEngineMessages, vectorURL } = await DB_getContextData(id);
+
+      //----------------------------------------------------------------
+      // Query Document With Message which streams response and returns new Chat Messages
+
+      const QueryDocumentInput: QueryDocumentInputType = {
+        res,
+        message,
+        vectorURL,
+        chatEngineMessages: chatEngineMessages as ChatMessage[],
+      };
+      const { newChatEngineMessages, newChatWindowMessage } = await RAG_QueryDocument(QueryDocumentInput);
+
+      const newChatWindowMessages: ChatMessage[] = [
+        { content: message, role: "user" },
+        { content: newChatWindowMessage, role: "assistant" },
+      ];
+
+      //----------------------------------------------------------------
+      // Update Context Window in DB with New Chat Messages
+
+      const StoreChatDataInput: StoreChatDataInputType = {
+        newChatWindowMessages,
+        newChatEngineMessages,
+        Id: id,
+      };
+      await DB_storeChatData(StoreChatDataInput);
+
+      //----------------------------------------------------------------
+      // End the Response
+
+      res.end();
+    } catch (error: any) {
+      console.log("error query : ", error.message);
+
+      res.status(404).send({ message: error.message });
+    }
+  });
+  router.post("/upload", AuthMiddleware, upload.single("file"), async (req: Request, res: Response) => {
+    try {
+      const user_email = res.get("email")!;
+      let file = req.file;
+      if (!file) throw Error("No File Provided");
+      const Key = v4();
+
+      //----------------------------------------------
+      // File Handling -- Convert all formats to text
+
+      const fileText = await convertFileToText(file);
+
+      //----------------------------------------------
+      // Implement Indexing , Embedding , Logic Here
+
+      const EmbedDocumentInput = {
+        text: fileText,
+        Key,
+      };
+
+      const vectorURL = await RAG_EmbedDocument(EmbedDocumentInput);
+
+      // //----------------------------------------------
+      // Upload to S3
+
+      const PutCommandInput: PutObjectCommandInput = {
+        Bucket,
+        Body: fs.createReadStream(file.path),
+        Key,
+        ContentType: file.mimetype,
+      };
+      await s3.send(new PutObjectCommand(PutCommandInput));
+
+      //----------------------------------------------
+      //  Create New ContextWindow Data in Prisma Here
+
+      const ContextWindowInput = {
+        fileKey: Key,
+        fileName: file.filename,
+        fileURL: BucketLink + Key,
+        vectorURL,
+        email: user_email,
+      };
+      const ContextWindow = await DB_createContextWindow(ContextWindowInput);
+
+      // //----------------------------------------------
+      // //  Clean Up & Return
+
+      await unlinkFile(file.path); // delete file from local disc
+      res.status(200).send({ ContextWindow });
+    } catch (error: any) {
+      res.status(404).send({ message: error.message });
+    }
+  });
   router.delete("/delete", AuthMiddleware, async (req: Request, res: Response) => {
     try {
       const { id } = req.body as { id: string };

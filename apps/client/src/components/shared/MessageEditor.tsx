@@ -3,19 +3,11 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { StreamQuery } from "src/query";
 import { sendMessage } from "src/redux/recipies/StreamUpdate";
-import { SelectContextWindowById } from "src/redux/selector";
-import { useAppDispatch, useTypedSelector } from "src/redux/store";
+import { useAppDispatch } from "src/redux/store";
 
-function MessageEditor({
-  setIsQuerying,
-  isQuerying,
-}: {
-  isQuerying: boolean;
-  setIsQuerying: React.Dispatch<SetStateAction<boolean>>;
-}) {
+function MessageEditor({ setIsQuerying, isQuerying }: { isQuerying: boolean; setIsQuerying: React.Dispatch<SetStateAction<boolean>> }) {
   const { id } = useParams();
   const [value, setValue] = useState("");
-  const ContextWindow = useTypedSelector((state) => SelectContextWindowById(state, id || ""));
   const dispatch = useAppDispatch();
   const handleChange = (event: any) => {
     setValue(event.target.value);
@@ -30,11 +22,11 @@ function MessageEditor({
   const handleSendMessage = async () => {
     const newmsg = value;
     setValue("");
-    if (!ContextWindow?.Id) return;
+    if (!id) return;
     try {
       setIsQuerying(true);
-      dispatch(sendMessage({ id: ContextWindow.Id, message: newmsg }));
-      await StreamQuery({ id: ContextWindow.Id, message: newmsg }, dispatch);
+      dispatch(sendMessage({ id, message: newmsg }));
+      await StreamQuery({ id, message: newmsg }, dispatch);
     } catch (error: any) {
       toast.error(`Error : ${error.message} `, {
         position: "top-center",
@@ -47,7 +39,6 @@ function MessageEditor({
     if (e.key === "Enter" && !e.ctrlKey && value.trim() !== "") {
       e.preventDefault();
       handleSendMessage();
-    } else if (e.key === "Enter" && e.ctrlKey) {
     }
   };
   return (
@@ -67,13 +58,7 @@ function MessageEditor({
         className=" -ml-10 flex items-center justify-center bg-primary text-white rounded p-2 focus:outline-none focus:ring-2 "
         style={{ width: "40px", height: "40px" }}
       >
-        <svg
-          className="w-6 h-6 transform -rotate-90"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="w-6 h-6 transform -rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
         </svg>
       </button>

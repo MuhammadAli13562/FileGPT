@@ -28,21 +28,15 @@ const ChatSelector = () => {
   if (isError) return <>Error Occured</>;
   return (
     <div className="flex flex-col  p-2 gap-4 overflow-auto mb-12">
-      {sortedContextWindowsData.map((ctx_win) => {
+      {sortedContextWindowsData.map((ctx_win, key) => {
         const IsSelected = id === ctx_win.fileKey;
 
         return (
-          <div
-            className={`flex justify-between relative border-black border-[1px] rounded-lg  ${
-              IsSelected ? "bg-black" : ""
-            }`}
-          >
+          <div key={key} className={`flex justify-between relative border-black border-[1px] rounded-lg  ${IsSelected ? "bg-black" : ""}`}>
             <Link
               key={ctx_win.fileKey}
               to={`/chat/${ctx_win.fileKey}`}
-              className={`hover:opacity-100 xl:py-3  flex-1 2xl:py-[14px]  ${
-                IsSelected ? "  opacity-100 " : "opacity-75 "
-              }`}
+              className={`hover:opacity-100 xl:py-3  flex-1 2xl:py-[14px]  ${IsSelected ? "  opacity-100 " : "opacity-75 "}`}
             >
               <div className="p-2 text-[#FAF7F5]  font-thin leading-3 flex-start small-regular rounded-xl">
                 {ctx_win.fileName.slice(0, 40)}

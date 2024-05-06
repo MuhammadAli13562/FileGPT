@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ChatWindow from "src/components/shared/ChatWindow";
 import FileViewer from "src/components/shared/FileViewer";
@@ -8,6 +9,7 @@ import { ScrollArea } from "src/components/ui/scroll-area";
 
 const ContextWindow = () => {
   const { id } = useParams();
+
   return (
     <div className="relative">
       <ResizablePanelGroup direction="horizontal" className="">

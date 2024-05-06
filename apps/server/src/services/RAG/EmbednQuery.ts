@@ -1,15 +1,4 @@
-import {
-  Document,
-  Settings,
-  VectorStoreIndex,
-  Groq,
-  storageContextFromDefaults,
-  ContextChatEngine,
-  QdrantVectorStore,
-  IndexStructType,
-  IndexStruct,
-  BaseIndexStore,
-} from "llamaindex";
+import { Document, Settings, VectorStoreIndex, Groq, storageContextFromDefaults, ContextChatEngine } from "llamaindex";
 import { EmbedDocumentInputType, QueryDocumentInputType } from "../../types/User";
 import dotenv from "dotenv";
 import path from "node:path";
@@ -18,7 +7,7 @@ dotenv.config();
 const GROQ_API = process.env.GROQ_API_KEY;
 const LLM_MODEL = process.env.LLM_MODEL;
 
-Settings.llm = new Groq({ apiKey: GROQ_API, model: LLM_MODEL, maxTokens: 512 });
+Settings.llm = new Groq({ apiKey: GROQ_API, model: LLM_MODEL });
 
 export const RAG_EmbedDocument = async (EmbedDocumentInput: EmbedDocumentInputType) => {
   try {
@@ -88,7 +77,7 @@ export const RAG_QueryDocument = async (QueryDocumentInput: QueryDocumentInputTy
     let result = "";
 
     for await (const chunk of stream) {
-      console.log(chunk.response);
+      //console.log(chunk.response);
       result += chunk.response;
       // HTTP PIPELINE
       res.write(JSON.stringify(chunk.response));

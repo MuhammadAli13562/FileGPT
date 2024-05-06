@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:postgres@localhost:5432/taxprogpt?schema=public"
+  url      = env("DATABASE_URL")
 }
 
 
@@ -32,7 +32,7 @@ model Context_Window {
   vectorURL String
   fileName String
   fileURL String
-  fileKey String
+  fileKey String @unique
   owner User @relation(fields: [ownerId] , references: [Id] , onUpdate: Cascade , onDelete: Cascade)
   ownerId Int
 

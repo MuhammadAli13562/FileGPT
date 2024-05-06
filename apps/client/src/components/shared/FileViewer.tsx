@@ -4,6 +4,7 @@ import { SelectMetaContextWindowById } from "src/redux/selector";
 import { useTypedSelector } from "src/redux/store";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { RotateLoader } from "react-spinners";
+import { useEffect } from "react";
 
 const FileViewer = () => {
   const { id } = useParams();
@@ -11,6 +12,11 @@ const FileViewer = () => {
   const ContextWindow = useTypedSelector((state) => SelectMetaContextWindowById(state, id!));
   const fileUrl = ContextWindow?.fileURL!;
   const docs = [{ uri: fileUrl }];
+
+  useEffect(() => {
+    console.log("rerend");
+  }, [docs]);
+
   if (isLoading)
     return (
       <div className="h-full w-full col-center">

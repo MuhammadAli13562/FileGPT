@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useFetchMetaDataFixedCache } from "src/redux/api/user";
+import { useFetchMetaDataQuery } from "src/redux/api/user";
 import { SelectMetaContextWindowById } from "src/redux/selector";
 import { useTypedSelector } from "src/redux/store";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 const FileViewer = () => {
   const { id } = useParams();
-  const { isLoading, isError } = useFetchMetaDataFixedCache();
+  const { isLoading, isError } = useFetchMetaDataQuery();
   const ContextWindow = useTypedSelector((state) => SelectMetaContextWindowById(state, id!));
   const fileUrl = ContextWindow?.fileURL!;
   const docs = [{ uri: fileUrl }];

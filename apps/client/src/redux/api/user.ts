@@ -92,11 +92,3 @@ export const UserApi = api.injectEndpoints({
 });
 
 export const { useFetchDataQuery, useUploadDocumentMutation, useDeleteContextMutation, useFetchMetaDataQuery, useFetchContextDataQuery } = UserApi;
-
-export const useFetchDataFixedCache = () => useFetchDataQuery();
-
-export const useFetchMetaDataFixedCache = () => useFetchMetaDataQuery();
-
-export const useDeleteContextFixedCache = () => useDeleteContextMutation();
-
-export const useFetchContextFixedCache = (id: string) => useFetchContextDataQuery(id);

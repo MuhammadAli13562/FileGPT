@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
-import { useFetchDataFixedCache } from "src/redux/api/user";
+import { useFetchDataQuery } from "src/redux/api/user";
 
 const RootLayout = () => {
-  const { isSuccess } = useFetchDataFixedCache();
+  const { isSuccess } = useFetchDataQuery();
 
   return (
     <div className="overflow-hidden apple-font ">

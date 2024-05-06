@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useFetchContextFixedCache } from "src/redux/api/user";
+import { useFetchContextDataQuery } from "src/redux/api/user";
 import { SelectContextWindowById } from "src/redux/selector";
 import { useTypedSelector } from "src/redux/store";
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +14,7 @@ const ChatWindow = () => {
   useVerificationOnMount();
   const { id } = useParams();
   const [isQuerying, setIsQuerying] = useState(false);
-  const { isLoading, isError } = useFetchContextFixedCache(id || "");
+  const { isLoading, isError } = useFetchContextDataQuery(id || "");
   const ContextWindow = useTypedSelector((state) => SelectContextWindowById(state, id || ""));
   const messagesRef = useRef<HTMLDivElement>(null);
 

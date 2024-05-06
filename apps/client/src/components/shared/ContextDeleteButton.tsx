@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { UserApi, useDeleteContextFixedCache } from "src/redux/api/user";
+import { UserApi, useDeleteContextMutation } from "src/redux/api/user";
 import { useAppDispatch } from "src/redux/store";
 
 const ContextDeleteButton = ({ Id }: { Id: string }) => {
-  const [deleteContext] = useDeleteContextFixedCache();
+  const [deleteContext] = useDeleteContextMutation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handleDelete = async () => {

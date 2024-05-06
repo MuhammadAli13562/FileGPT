@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useFetchMetaDataFixedCache } from "src/redux/api/user";
+import { useFetchMetaDataQuery } from "src/redux/api/user";
 import { SelectAllMetaContextWindows } from "src/redux/selector";
 import { useTypedSelector } from "src/redux/store";
 import SkeletonChatSelector from "../skeletons/Skeleton.ChatSelector";
@@ -7,7 +7,7 @@ import ContextDeleteButton from "./ContextDeleteButton";
 
 const ChatSelector = () => {
   const { id } = useParams();
-  const { isLoading, isError } = useFetchMetaDataFixedCache();
+  const { isLoading, isError } = useFetchMetaDataQuery();
   const ContextWindowsData = useTypedSelector(SelectAllMetaContextWindows);
   const sortedContextWindowsData = [...ContextWindowsData].sort((ctx1, ctx2) => {
     // Convert createdAt values to Date objects for proper comparison

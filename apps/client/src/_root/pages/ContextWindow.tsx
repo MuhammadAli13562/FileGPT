@@ -12,21 +12,29 @@ const ContextWindow = () => {
   return (
     <div className="relative">
       <ResizablePanelGroup direction="horizontal" className="">
-        <ResizablePanel defaultSize={20} className=" h-screen min-w-56">
+        <ResizablePanel defaultSize={20} className=" h-screen min-w-56 ">
           <ScrollArea>
             <LeftBar />
           </ScrollArea>
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel>
-          <FileViewer />
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={42} className=" border-l-4">
-          <ChatWindow />
-        </ResizablePanel>
+        {id === "default" ? (
+          <ResizablePanel>
+            <Overlay />
+          </ResizablePanel>
+        ) : (
+          <>
+            <ResizablePanel>
+              <FileViewer />
+            </ResizablePanel>
+            <ResizableHandle />
+            <ResizablePanel defaultSize={42} className=" border-l-4">
+              <ChatWindow />
+            </ResizablePanel>
+          </>
+        )}
       </ResizablePanelGroup>
-      {id === "default" && <Overlay />}
+      {}
     </div>
   );
 };

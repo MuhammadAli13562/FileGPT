@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { fixedCacheKey } from "src/constants";
 import { UserApi, useUploadDocumentMutation } from "src/redux/api/user";
 import { toast } from "react-toastify";
 import { ContextDataType } from "@backend/prisma/selections";

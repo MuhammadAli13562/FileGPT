@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ChatWindow from "src/components/shared/ChatWindow";
 import FileViewer from "src/components/shared/FileViewer";

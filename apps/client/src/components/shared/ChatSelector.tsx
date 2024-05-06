@@ -43,7 +43,7 @@ const ChatSelector = () => {
                 {ctx_win.fileName.length > 40 && "....."}
               </div>
             </Link>
-            <ContextDeleteButton IsSelected={IsSelected} Id={String(ctx_win.Id)} />
+            {IsSelected && <ContextDeleteButton Id={String(ctx_win.Id)} />}
           </div>
         );
       })}

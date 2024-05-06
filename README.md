@@ -4,7 +4,7 @@
 
 | LLM Model          | Embeddings                          | RAG Framework |
 |--------------------|-------------------------------------|---------------|
-| Mixtral-8x7b-32768 | Open AI's Text-embedding-ada-002-v2 | LlamaIndex    |
+| llama3-8b-8192 | Open AI's Text-embedding-ada-002-v2 | LlamaIndex    |
 
 ## Frontend
 
@@ -26,16 +26,17 @@
 
 # System Design
 
-![design2](https://github.com/MuhammadAli13562/taxprogpt/assets/40227926/52e563d9-76f5-4c0b-aa96-3e8f29de6c20)
+![sys](https://github.com/MuhammadAli13562/filegpt/assets/40227926/bf89423c-28fa-4873-ac27-7bd853b8293f)
 
 
 # Landing Page
 
-![landing](https://github.com/MuhammadAli13562/taxprogpt/assets/40227926/a88b5468-bc62-4bd3-a8d0-d713f6c1b856)
+![newsimdes](https://github.com/MuhammadAli13562/filegpt/assets/40227926/1be3c048-e063-4a93-83d1-943d2a3d6c64)
 
 
 # Demo Snapshot
-![ex](https://github.com/MuhammadAli13562/taxprogpt/assets/40227926/9c99fa79-c6d8-4876-a651-195f6c648d7d)
+
+![newsmp](https://github.com/MuhammadAli13562/filegpt/assets/40227926/ed71c7f3-f53d-4f85-a6b6-64a7c5c2fb24)
 
 
 ### - Docker compose Config for whole app coming soon...

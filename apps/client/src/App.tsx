@@ -22,9 +22,10 @@ function App() {
             </Route>
             {/* Private Routes */}
             <Route element={<RootLayout />}>
-              <Route path="*" element={<Navigate to="/sign-in" />} />
               <Route path="/chat/:id" element={<ContextWindow />} />
             </Route>
+            {/* Remaining Routes */}
+            <Route path="*" element={<Navigate to="/sign-in" />} />
           </Routes>
         </BrowserRouter>
       </ApiProvider>

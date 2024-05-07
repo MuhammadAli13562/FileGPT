@@ -1,4 +1,4 @@
-# LLM Powered - RAG Based - Tax Assistant
+# LLM Powered - RAG Based - File Reading Assistant
 
 ## Language Model & Embeddings
 
